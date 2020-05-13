@@ -3,7 +3,7 @@
 	"displayName": "Mailgun Upload Template",
 	"description": "Easy way to upload mailgun template",
 	"version": "0.0.1",
-	"publisher": "vscode-samples",
+	"publisher": "Allan-Nava",
   	"repository": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode",
 	"engines": {
 		"vscode": "^1.45.0"
