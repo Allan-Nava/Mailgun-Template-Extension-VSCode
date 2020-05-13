@@ -1,5 +1,7 @@
 # Mailgun Upload Template Vscode README
 
+https://www.mailgun.com/homepage/
+
 This is the README for your extension "mailgun-upload-template-vscode". After writing up a brief description, we recommend including the following sections.
 
 ## Features
