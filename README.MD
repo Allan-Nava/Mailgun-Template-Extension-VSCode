@@ -1,0 +1,1 @@
+# Mailgun Upload Template 
