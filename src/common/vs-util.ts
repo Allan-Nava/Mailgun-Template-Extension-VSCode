@@ -17,6 +17,7 @@ import { Context } from 'vm';
 var homeDir     = os.homedir();
 var pathUtil    = require('./path-util');
 var commonUtil  = require('./common-util');
+var fileUtil    = require('./file-util');
 ///
 export class VsUtil {
     ///
@@ -36,7 +37,28 @@ export class VsUtil {
     ///
     getConfigPath ( filename : vscode.TextDocument ){
         return pathUtil.join( context.globalStoragePath , filename ? filename : "");
-      }
+    }
+    ///
+    existConfig( filename : vscode.TextDocument){
+        // var result = true;
+        return fileUtil.existSync(this.getConfigPath(filename));
+    }
+    ///
+    hide (){
+        if(vscode.window.activeTextEditor)
+        {
+          try{
+            vscode.window.activeTextEditor.hide();
+          }catch(e){
+            vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+          }
+        }
+        else
+        {
+          vscode.commands.executeCommand("workbench.action.closeActiveEditor");
+        }
+    };
+    ///
     ///
 }
 ///
