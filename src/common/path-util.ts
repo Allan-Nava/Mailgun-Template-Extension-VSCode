@@ -1,7 +1,7 @@
 /*---------------------------------------------------------
  * Mailgun Upload Template VSCode
  *
- * common-util.ts
+ * path-util.ts
  * Updated 13/05/2020.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
