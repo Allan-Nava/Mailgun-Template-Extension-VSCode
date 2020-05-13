@@ -1,6 +1,9 @@
 /*---------------------------------------------------------
  * Mailgun Upload Template VSCode
+ *
+ * extension.ts
  * Created by Allan Nava.
+ * Updated 13/05/2020.
  * Copyright (C) Allan Nava. All rights reserved.
  *--------------------------------------------------------*/
 // The module 'vscode' contains the VS Code extensibility API
@@ -24,9 +27,29 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 	});
-
+	/// Added the test command
 	context.subscriptions.push(disposable);
+	///
+	let configMailgun = vscode.commands.registerCommand('mailgun-upload-template-vscode.config', () => {
+		// The code you place here will be executed every time your command is executed
+		// Display a message box to the user
+		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
+		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
+	});
+	/// Added the command for creation configMailgun
+	context.subscriptions.push(configMailgun);
+	///
+	let uploadTemplateMailgun = vscode.commands.registerCommand('mailgun-upload-template-vscode.upload', () => {
+		// The code you place here will be executed every time your command is executed
+		// Display a message box to the user
+		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
+		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
+	});
+	/// Added the upload template command
+	context.subscriptions.push(uploadTemplateMailgun);
+	///
 }
-
+///
 // this method is called when your extension is deactivated
 export function deactivate() {}
+///

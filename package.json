@@ -12,14 +12,28 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:mailgun-upload-template-vscode.helloWorld"
+		"*"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "mailgun-upload-template-vscode.helloWorld",
-				"title": "Hello World"
+				"command"	: "mailgun-upload-template-vscode.helloWorld",
+				"title"		: "Mailgun : Hello World"
+			},
+			{
+				"command"	: "mailgun-upload-template-vscode.config",
+				"title"		: "Mailgun : Config - Mailgun connection setting"
+			},
+			{
+				"command"	: "mailgun-upload-template-vscode.upload",
+				"title"		: "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server"
+			}
+		],
+		"editor/title/context": [
+			{
+			  	"command"	: "mailgun-upload-template-vscode.upload",
+			  	"group"		: "mailgun-upload-template-vscode"
 			}
 		]
 	},
