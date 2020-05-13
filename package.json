@@ -30,12 +30,26 @@
 				"title"		: "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server"
 			}
 		],
-		"editor/title/context": [
-			{
-			  	"command"	: "mailgun-upload-template-vscode.upload",
-			  	"group"		: "mailgun-upload-template-vscode"
-			}
-		]
+		"menus": {
+			"explorer/context": [
+				{
+					"command"	: "mailgun-upload-template-vscode.upload",
+					"group"		: "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/context": [
+				{
+					"command"	: "mailgun-upload-template-vscode.upload",
+					"group"		: "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command"	: "mailgun-upload-template-vscode.upload",
+					"group"		: "mailgun-upload-template-vscode"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
