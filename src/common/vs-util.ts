@@ -149,7 +149,14 @@ export class VsUtil {
     return arr;
   };
   ///
-  getActiveFilePath ( item: { fsPath: any; } ){
+  isUntitled (){
+    return vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.isUntitled : undefined;
+  };
+  isDirty(){
+    return vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.isDirty : undefined;
+  };
+  ///
+  getActiveFilePath ( item: any  ){
     var path = "";
     if(item && item.fsPath)
     {
@@ -185,6 +192,23 @@ export class VsUtil {
       }
     }
     return path;
+  };
+  save (cb: ((arg0: boolean | undefined) => void) | undefined){
+    var dirty = this.isDirty();
+    if(dirty)
+    {
+      vscode.window.activeTextEditor.document.save().then(function(result){
+        if(cb)cb(result);
+      });
+    }
+    else if(dirty === false) cb(true);
+    else if(cb) cb();
+  };
+  ///
+  getActiveFileName (){
+    var path = this.getActiveFilePath();
+    if(path) return pathUtil.getFileName(path);
+    else return null;
   };
   ///
 }
