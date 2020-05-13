@@ -34,7 +34,7 @@
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
-		"@types/node": "^13.11.0",
+		"@types/node": "^13.13.6",
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
@@ -48,6 +48,8 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
-		"mailgun": "^0.5.0"
+		"crypto": "^1.0.1",
+		"mailgun": "^0.5.0",
+		"path": "^0.12.7"
 	}
 }
