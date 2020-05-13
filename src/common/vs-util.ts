@@ -211,5 +211,17 @@ export class VsUtil {
     else return null;
   };
   ///
+  getConfiguration ( key: string ){
+    var arr = key.split(".");
+    var parent = arr.splice(0, arr.length - 1).join(".");
+    var o = vscode.workspace.getConfiguration(parent);
+    if(o)
+    {
+      o = o.get(arr[0]);
+    }
+    else o = null;
+    return o;
+  }
+  ///
 }
 ///
