@@ -65,6 +65,9 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
 		console.log("item:", item);
 		///
+		var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
+    	console.log("localFilePath:",localFilePath);
+		///
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);

@@ -78,6 +78,55 @@ export class VsUtil {
     return p;
   };
   ///
+  msg (msg: string, btn: string | undefined, cb: ((arg0: string | undefined) => void) | undefined){
+    var p = btn ? vscode.window.showInformationMessage(msg, btn) : vscode.window.showInformationMessage(msg);
+    if(cb)
+    {
+      p.then(function(btn){
+        cb(btn);
+      });
+    }
+    return p;
+  }
+  ///
+  info (msg: string, btn: string | undefined, cb: ((arg0: string | undefined) => void) | undefined){
+    var p = btn ? vscode.window.showInformationMessage(msg, btn) : vscode.window.showInformationMessage(msg);
+    if(cb)
+    {
+      p.then(function(btn){
+        cb(btn);
+      });
+    }
+    return p;
+  }
+  warning ( msg: string, btn1: string, btn2: string | undefined, cb: (arg0: string | undefined) => void ){
+    if(typeof btn2 === 'function')
+    {
+      cb = btn2;
+      btn2 = undefined;
+    }
+    var p = vscode.window.showWarningMessage(msg, btn1, btn2);
+    if(cb)
+    {
+      p.then(function(btn: string | undefined){
+        cb(btn);
+      });
+    }
+    return p;
+  }
+  ///
+  error (msg: string, btn: string, cb: (arg0: string | undefined) => void){
+    if(btn)  var p = vscode.window.showErrorMessage(msg, btn);
+    else     var p = vscode.window.showErrorMessage(msg);
+    if(cb)
+    {
+      p.then(function(btn){
+        cb(btn);
+      });
+    }
+    return p;
+  }
+  ///
   isChangeTextDocument( uri: string ){
     var arr = this.getActiveFilePathAll();
     if(/\.git$/.test(uri)) uri = uri.substring(0, uri.length - 4);
@@ -100,6 +149,43 @@ export class VsUtil {
     return arr;
   };
   ///
+  getActiveFilePath ( item: { fsPath: any; } ){
+    var path = "";
+    if(item && item.fsPath)
+    {
+      path = pathUtil.normalize(item.fsPath);
+    }
+    else
+    {
+      try{
+        path = pathUtil.normalize( vscode.window.activeTextEditor.document.fileName);
+      }catch(e){}
+    }
+    return path;
+  };
+  ///
+  getActiveFilePathAndMsg ( item: any, msg : string){
+    var path = this.getActiveFilePath(item);  
+    if(!path)
+    {
+      if(msg)this.msg(msg);
+    }
+    else
+    {
+      var isDir = false;
+      try{isDir = fileUtil.isDirSync(path);}catch(e){};
+      if(!isDir)
+      {
+        if(this.isUntitled()) 
+        {
+          this.msg("Please save first");
+          path = "";
+        }
+        if(this.isDirty())  this.save();
+      }
+    }
+    return path;
+  };
   ///
 }
 ///
