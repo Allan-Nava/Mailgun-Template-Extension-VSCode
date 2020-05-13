@@ -2,11 +2,13 @@
  * Mailgun Upload Template VSCode
  *
  * common-util.ts
- * Updated 13/05/2020.
- * Created by Allan Nava.
+ * Created  13/05/2020.
+ * Updated  14/05/2020.
+ * Author   Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
  *--------------------------------------------------------*/
 ///
+/* eslint-disable eqeqeq */
 'use strict';
 ///
 import vscode   = require('vscode');
@@ -58,6 +60,44 @@ export class VsUtil {
       {
         vscode.commands.executeCommand("workbench.action.closeActiveEditor");
       }
+  };
+  ///
+  status ( msg : string, time : number ){
+    vscode.window.setStatusBarMessage(msg, time);
+  };
+  ///
+  pick ( data: string[] | Thenable<string[]>, option: (vscode.QuickPickOptions & { canPickMany: true; }) | undefined, cb: (arg0: string[]) => void){
+    if(arguments.length === 2 && typeof option === 'function'){
+      cb = option;
+      option = undefined;
+    } else if(typeof option === 'string'){
+      option = {placeHolder:option};
+    }
+    var p = vscode.window.showQuickPick(data, option);
+    if(cb) p.then(function(val){if(val)cb(val);});
+    return p;
+  };
+  ///
+  isChangeTextDocument( uri: string ){
+    var arr = this.getActiveFilePathAll();
+    if(/\.git$/.test(uri)) uri = uri.substring(0, uri.length - 4);
+    return arr.indexOf(uri) == -1;
+  };
+  ///
+  getActiveFilePathAll( ) {
+    var docs = vscode.workspace.textDocuments;
+    var arr = [];
+    if(docs)
+    {
+      for(var i=0; i<docs.length; i++)
+      {
+        if(docs[i].uri && docs[i].uri.scheme != "output" && docs[i].uri.fsPath)
+        {
+          arr.push(pathUtil.normalize(docs[i].uri.fsPath));
+        }
+      }
+    }
+    return arr;
   };
   ///
   ///

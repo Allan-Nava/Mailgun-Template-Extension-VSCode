@@ -18,35 +18,35 @@
 	"contributes": {
 		"commands": [
 			{
-				"command"	: "mailgun-upload-template-vscode.helloWorld",
-				"title"		: "Mailgun : Hello World"
+				"command": "mailgun-upload-template-vscode.helloWorld",
+				"title": "Mailgun : Hello World"
 			},
 			{
-				"command"	: "mailgun-upload-template-vscode.config",
-				"title"		: "Mailgun : Config - Mailgun connection setting"
+				"command": "mailgun-upload-template-vscode.config",
+				"title": "Mailgun : Config - Mailgun connection setting"
 			},
 			{
-				"command"	: "mailgun-upload-template-vscode.upload",
-				"title"		: "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server"
+				"command": "mailgun-upload-template-vscode.upload",
+				"title": "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server"
 			}
 		],
 		"menus": {
 			"explorer/context": [
 				{
-					"command"	: "mailgun-upload-template-vscode.upload",
-					"group"		: "mailgun-upload-template-vscode"
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
 				}
 			],
 			"editor/context": [
 				{
-					"command"	: "mailgun-upload-template-vscode.upload",
-					"group"		: "mailgun-upload-template-vscode"
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
 				}
 			],
 			"editor/title/context": [
 				{
-					"command"	: "mailgun-upload-template-vscode.upload",
-					"group"		: "mailgun-upload-template-vscode"
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
 				}
 			]
 		}
@@ -76,6 +76,7 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
+		"chokidar": "^3.4.0",
 		"crypto": "^1.0.1",
 		"filesize": "^6.1.0",
 		"fs": "0.0.1-security",
