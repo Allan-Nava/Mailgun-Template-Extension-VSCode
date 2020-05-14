@@ -11,6 +11,7 @@
 /* eslint-disable eqeqeq */
 'use strict';
 ///
+/*
 import vscode   = require('vscode');
 import path     = require('path');
 import os       = require('os');
@@ -26,7 +27,7 @@ var pathUtil    = new PathUtil();
 var commonUtil  = new CommonUtil();
 var fileUtil    = new FileUtil();
 ///
-/*
+
 export class VsUtil {
   ///
   context!                : vscode.ExtensionContext;
