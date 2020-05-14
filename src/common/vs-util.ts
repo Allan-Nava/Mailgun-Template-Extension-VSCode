@@ -17,9 +17,14 @@ import os       = require('os');
 import filesize = require('filesize');
 import { Context } from 'vm';
 var homeDir     = os.homedir();
-var pathUtil    = require('./path-util');
-var commonUtil  = require('./common-util');
-var fileUtil    = require('./file-util');
+///
+import { PathUtil }   from "./path-util";
+import { CommonUtil}  from "./common-util";
+import { FileUtil }   from "./file-util";
+///
+var pathUtil    = new PathUtil();
+var commonUtil  = new CommonUtil();
+var fileUtil    = new FileUtil();
 ///
 export class VsUtil {
   ///
@@ -250,9 +255,9 @@ export class VsUtil {
       //cb = filter;
       filter = undefined;
     }
-    fileUtil.ls(path, function(err: any, files: any){
+    /*fileUtil.ls(path, function(err: any, files: any){
       //cb( this.makePickItemForFile( files, filter ) );
-    });
+    });*/
   };
   ///
   makePickItemForFile ( list?: string | any , filter?: any ){
@@ -299,7 +304,10 @@ export class VsUtil {
       rootPath = nowPath;
       nowPath = addItems;
     }
-    if(nowPath && rootPath && nowPath.length > rootPath.length) {list = [{label:"..", description:"Go to parent directory : " + pathUtil.getParentPath(nowPath)}].concat(list);}
+    if(nowPath && rootPath && nowPath.length > rootPath.length) {
+      nowPath = nowPath as string;
+      list    = [{label:"..", description:"Go to parent directory : " + pathUtil.getParentPath(nowPath)}].concat(list);
+    }
     return list;
   };
   ////

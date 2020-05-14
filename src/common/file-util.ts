@@ -36,6 +36,13 @@ export class FileUtil {
         });
     }
     ///
+    isDirSync ( path : string ){
+        try{
+            var stats = fs.statSync(path);
+            return stats && stats.isDirectory();
+        }catch(e){return false;}
+    }
+    ///
     mkdir ( path: any, cb: (arg0: undefined) => void ){
         this.exist(path, function(result){
             if(!result)
@@ -44,7 +51,7 @@ export class FileUtil {
                     if(cb)cb(err);
                 });
             }
-            else if(cb)cb();
+            //else if(cb){ cb() };
         });
     }
     ///
@@ -124,7 +131,8 @@ export class FileUtil {
             if(err) cb(o);
             else
             {
-                cb( this.makeStat( path, stats ) );
+                // need to fix 
+                //cb( this.makeStat( path, stats ) );
             }
         });
     }
@@ -185,7 +193,7 @@ export class FileUtil {
                 self.isDir(path, function(_err, result){
                     if(result)
                     {
-                        self.ls(path, function(_err: any, files: any){
+                        /*self.ls(path, function(_err: any, files: any){
                             loop(files, function(_i: any, value: { name: any; }, next: () => void){
                                 self.rm(pathUtil.join(path, value.name), function(){
                                     next();
@@ -195,7 +203,7 @@ export class FileUtil {
                                     if(cb) {cb();}
                                 });
                             });
-                        });
+                        });*/
                     }
                     else
                     {

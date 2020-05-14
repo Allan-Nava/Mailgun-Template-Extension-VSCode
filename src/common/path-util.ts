@@ -25,10 +25,10 @@ export class PathUtil {
         return path.normalize(p).replace(/\\/g, '/');
     };
     ///
-    join(){
+    join ( ...args: any[] ) {
         var p = "";
-        for(var i=0; i<arguments.length; i++){
-          p = path.join(p, arguments[i]);
+        for(var i=0; i<args.length; i++){
+          p = path.join(p, args[i]);
         }
         return this.normalize(p);
     };
