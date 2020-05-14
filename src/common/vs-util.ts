@@ -75,7 +75,7 @@ export class VsUtil {
       option = {placeHolder:option};
     }
     var p = vscode.window.showQuickPick(data, option);
-    if(cb) p.then(function(val){if(val)cb(val);});
+    if(cb) {p.then(function(val){if(val){cb(val);}});}
     return p;
   };
   ///
@@ -117,8 +117,8 @@ export class VsUtil {
   }
   ///
   error (msg: string, btn: string, cb: (arg0: string | undefined) => void){
-    if(btn)  var p = vscode.window.showErrorMessage(msg, btn);
-    else     var p = vscode.window.showErrorMessage(msg);
+    if(btn)  {var p = vscode.window.showErrorMessage(msg, btn);}
+    else     {var p = vscode.window.showErrorMessage(msg);}
     if(cb)
     {
       p.then(function(btn){
@@ -178,7 +178,7 @@ export class VsUtil {
     var path = this.getActiveFilePath(item);  
     if(!path)
     {
-      if(msg)this.msg(msg);
+      if(msg){this.msg(msg);}
     }
     else
     {
@@ -191,7 +191,7 @@ export class VsUtil {
           this.msg("Please save first");
           path = "";
         }
-        if(this.isDirty())  this.save();
+        if(this.isDirty())  {this.save();}
       }
     }
     return path;
@@ -201,17 +201,17 @@ export class VsUtil {
     if(dirty)
     {
       vscode.window.activeTextEditor.document.save().then(function(result){
-        if(cb)cb(result);
+        if(cb){cb(result);}
       });
     }
-    else if(dirty === false) cb(true);
-    else if(cb) cb();
+    else if(dirty === false) {cb(true);}
+    else if(cb) {cb();}
   };
   ///
   getActiveFileName (){
     var path = this.getActiveFilePath();
-    if(path) return pathUtil.getFileName(path);
-    else return null;
+    if(path) {return pathUtil.getFileName(path);}
+    else {return null;}
   };
   ///
   getConfiguration ( key: string ){
@@ -244,11 +244,11 @@ export class VsUtil {
     for(var i=0; i<list.length; i++)
     {
       if(!filter || filter === list[i].type.toUpperCase())
-        arr.push({label:list[i].name, description:"TYPE : " + (list[i].type.toUpperCase() == "D" ? "Directory" : "File") + ", DATE : "+list[i].date.toLocaleString() + ", SIZE : " + filesize(list[i].size), type:list[i].type.toUpperCase()});
+        {arr.push({label:list[i].name, description:"TYPE : " + (list[i].type.toUpperCase() == "D" ? "Directory" : "File") + ", DATE : "+list[i].date.toLocaleString() + ", SIZE : " + filesize(list[i].size), type:list[i].type.toUpperCase()});}
     }
     arr.sort(function(a,b){
-      if(a.type < b.type || a.type == b.type && a.label < b.label) return -1;
-      if(a.type > b.type || a.type == b.type && a.label > b.label) return 1;
+      if(a.type < b.type || a.type == b.type && a.label < b.label) {return -1;}
+      if(a.type > b.type || a.type == b.type && a.label > b.label) {return 1;}
       return 0;
     });
     return arr;
@@ -265,7 +265,7 @@ export class VsUtil {
       {
         for(var i in addItems)
         {
-          if(typeof addItems[i] === "string") addItems[i] = {label:addItems[i]};
+          if(typeof addItems[i] === "string") {addItems[i] = {label:addItems[i]};}
           if(addItems[i].label == ".")
           {
             addItems[i].description = "Current directory : " + nowPath;
@@ -283,7 +283,7 @@ export class VsUtil {
       rootPath = nowPath;
       nowPath = addItems;
     }
-    if(nowPath && rootPath && nowPath.length > rootPath.length) list = [{label:"..", description:"Go to parent directory : " + pathUtil.getParentPath(nowPath)}].concat(list);
+    if(nowPath && rootPath && nowPath.length > rootPath.length) {list = [{label:"..", description:"Go to parent directory : " + pathUtil.getParentPath(nowPath)}].concat(list);}
     return list;
   };
   ////
