@@ -9,7 +9,8 @@
  *--------------------------------------------------------*/
 ///
 'use strict';
-import path = require('path');
+//import path = require('path');
+import * as path from 'path';
 ///
 export class PathUtil {
     ///

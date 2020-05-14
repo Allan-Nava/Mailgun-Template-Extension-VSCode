@@ -26,6 +26,7 @@ var pathUtil    = new PathUtil();
 var commonUtil  = new CommonUtil();
 var fileUtil    = new FileUtil();
 ///
+/*
 export class VsUtil {
   ///
   context!                : vscode.ExtensionContext;
@@ -255,9 +256,9 @@ export class VsUtil {
       //cb = filter;
       filter = undefined;
     }
-    /*fileUtil.ls(path, function(err: any, files: any){
+    //fileUtil.ls(path, function(err: any, files: any){
       //cb( this.makePickItemForFile( files, filter ) );
-    });*/
+    //});
   };
   ///
   makePickItemForFile ( list?: string | any , filter?: any ){
@@ -318,3 +319,4 @@ export class VsUtil {
   ////
 }
 ///
+*/

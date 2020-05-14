@@ -12,10 +12,10 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 ///
-var commonUtil 		= require('./common/common-util');
-var vsUtil 			= require('./common/vs-util');
-var fileUtil 		= require('./common/file-util');
-var cryptoUtil 		= require('./common/crypto-util');
+//var commonUtil 		= require('./common/common-util');
+//var vsUtil 			= require('./common/vs-util');
+//var fileUtil 		= require('./common/file-util');
+//var cryptoUtil 		= require('./common/crypto-util');
 ///
 var outputChannel 	= null;
 ///
@@ -25,6 +25,7 @@ const CONFIG_MAILGUN_WORKSPACE_TEMP	= "mailgun-workspace-temp";
 let CONFIG_PATH: String, CONFIG_PATH_TEMP: any, WAIT_COPY_PATH, REMOTE_WORKSPACE_TEMP_PATH;
 ///
 ///
+/*
 function moveOldConfigFile(){
 	let oldConfig = vsUtil.getOldConfigPath(CONFIG_NAME);
 	if(!fileUtil.existSync(CONFIG_PATH) && fileUtil.existSync(oldConfig)) {
@@ -32,7 +33,7 @@ function moveOldConfigFile(){
 		if(!e){fileUtil.rm(oldConfig);}
 	  });
 	}
-}
+}*/
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -40,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	//var mg = new Mailgun('api-key');
-	vsUtil.setContext(context);
+	//vsUtil.setContext(context);
 	///
 	//var subscriptions 	= [];
 	//outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
@@ -69,12 +70,12 @@ export function activate(context: vscode.ExtensionContext) {
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
 		//console.log(JSON.stringify(vscode.workspace.getConfiguration('hello')));
-		var configSet = initConfig();
+		/*var configSet = initConfig();
 		if(configSet.result){
 		  fileUtil.writeFile(CONFIG_PATH_TEMP, JSON.stringify(configSet.json, null, '\t'), function(){
 			vsUtil.openTextDocument(CONFIG_PATH_TEMP);
 		  });
-		}
+		}*/
 	});
 	/// Added the command for creation configMailgun
 	context.subscriptions.push(configMailgun);
@@ -86,8 +87,8 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
 		console.log("item:", item);
 		///
-		var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
-    	console.log("localFilePath:",localFilePath);
+		//var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
+    	//console.log("localFilePath:",localFilePath);
 		///
 	});
 	/// Added the upload template command
@@ -102,12 +103,13 @@ vscode.window.onDidChangeActiveTextEditor(function(event){
 	console.log("onDidChangeActiveTextEditor "+event);
 });
 ///
+/*
 function setDefaultConfig(config: string | any[]){
 	for(var i=0; i<config.length; i++)
 	{
-	  if(config[i].autosave === undefined) config[i].autosave = true;
-	  if(config[i].confirm === undefined) config[i].confirm = true;
-	  if(config[i].path === undefined) config[i].path = "/";
+	  if(config[i].autosave === undefined) {config[i].autosave = true;}
+	  if(config[i].confirm === undefined) {config[i].confirm = true;}
+	  if(config[i].path === undefined) {config[i].path = "/";}
 	}
 	return config;
 }
@@ -151,4 +153,4 @@ function getConfig(){
 		json = config.json;
 	}
 	return json;
-}
+}*/

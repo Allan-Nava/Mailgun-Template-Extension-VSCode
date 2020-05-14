@@ -9,7 +9,8 @@
  *--------------------------------------------------------*/
 ///
 'use strict';
-import crypto = require('crypto');
+//import crypto = require('crypto');
+import * as crypto from 'crypto';
 ///
 export class CommonUtil {
     ///

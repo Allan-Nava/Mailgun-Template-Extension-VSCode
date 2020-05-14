@@ -10,10 +10,15 @@
  *--------------------------------------------------------*/
 ///
 'use strict';
-var fs      = require('fs');
-var fse     = require('fs-extra');
-var loop    = require('easy-loop');
-var pathUtil = require('./path-util');
+import * as fs from 'fs';
+import * as fse from 'fs-extra';
+import { PathUtil } from './path-util';
+let pathUtil = new PathUtil();
+//import * as fse from 'fse-extra';
+//let fs      = require('fs');
+//let fse     = require('fs-extra');
+//let loop    = require('easy-loop');
+//let pathUtil = require('./path-util');
 ///
 export class FileUtil {
     ///
@@ -66,7 +71,7 @@ export class FileUtil {
             if(err)	cb(err, list);
             else 
             {	
-                loop(files, 5, function(_i: any, value: any, next: () => void){
+                /*loop(files, 5, function(_i: any, value: any, next: () => void){
                     fs.stat(pathUtil.join(path, value), function(stats: { type: string; path: any; }){
                         if(stats) 
                         {
@@ -87,7 +92,7 @@ export class FileUtil {
                     });
                 }, function(err: any){
                     if(cb) cb(err, list);
-                });
+                });*/
             }
         });
     }
@@ -224,8 +229,8 @@ export class FileUtil {
             });
         };
         var parent = pathUtil.getParentPath(destPath);
-        if(parent != destPath) fse.ensureDir(parent, copy);
-        else this.copy();
+        //if(parent != destPath) fse.ensureDir(parent, copy);
+        //else this.copy();
     }
 }
 ///
