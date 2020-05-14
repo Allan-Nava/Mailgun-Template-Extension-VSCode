@@ -42,14 +42,14 @@ export function activate(context: vscode.ExtensionContext) {
 	//var mg = new Mailgun('api-key');
 	vsUtil.setContext(context);
 	///
-	var subscriptions 	= [];
-	outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
-	CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
-	CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
+	//var subscriptions 	= [];
+	//outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
+	//CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
+	//CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
 	// REMOTE_TEMP_PATH = vsUtil.getConfigPath(CONFIG_FTP_TEMP);
-	moveOldConfigFile();
-	console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
-	console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
+	//moveOldConfigFile();
+	//console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
+	//console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
 	// destroy(true);
 
 	// The command has been defined in the package.json file
@@ -98,7 +98,10 @@ export function activate(context: vscode.ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() {}
 ///
-
+vscode.window.onDidChangeActiveTextEditor(function(event){
+	console.log("onDidChangeActiveTextEditor "+event);
+});
+///
 function setDefaultConfig(config: string | any[]){
 	for(var i=0; i<config.length; i++)
 	{

@@ -40,7 +40,7 @@ export class VsUtil {
   }
   ///
   getConfigPath ( filename : vscode.TextDocument ){
-    return pathUtil.join( context.globalStoragePath , filename ? filename : "");
+    return pathUtil.join( this.context.globalStoragePath , filename ? filename : "");
   }
   ///
   existConfig( filename : vscode.TextDocument){
@@ -67,7 +67,7 @@ export class VsUtil {
     vscode.window.setStatusBarMessage(msg, time);
   };
   ///
-  pick ( data: string[] | Thenable<string[]>, option: (vscode.QuickPickOptions & { canPickMany: true; }) | undefined, cb: (arg0: string[]) => void){
+  pick ( data: string[] | Thenable<string[]>, option: (vscode.QuickPickOptions & { canPickMany?: true; }) | undefined, cb: (arg0: string[]) => void){
     if(arguments.length === 2 && typeof option === 'function'){
       cb = option;
       option = undefined;
@@ -75,7 +75,7 @@ export class VsUtil {
       option = {placeHolder:option};
     }
     var p = vscode.window.showQuickPick(data, option);
-    if(cb) {p.then(function(val){if(val){cb(val);}});}
+    if(cb) {p.then(function(val?: any){if(val){cb(val);}});}
     return p;
   };
   ///
@@ -100,16 +100,17 @@ export class VsUtil {
     }
     return p;
   }
-  warning ( msg: string, btn1: string, btn2: string | undefined, cb: (arg0: string | undefined) => void ){
+  warning ( msg: string, btn1?: string, btn2?: string | undefined, cb?: (arg0: any | undefined) => void ){
     if(typeof btn2 === 'function')
     {
       cb = btn2;
       btn2 = undefined;
     }
-    var p = vscode.window.showWarningMessage(msg, btn1, btn2);
+    var p = vscode.window.showWarningMessage(msg, ); //btn1, btn2);
     if(cb)
     {
-      p.then(function(btn: string | undefined){
+      p.then(function(btn?: string | undefined){
+        cb = cb as  (arg0: any | undefined) => void;
         cb(btn);
       });
     }
@@ -168,6 +169,7 @@ export class VsUtil {
     else
     {
       try{
+        vscode.window.activeTextEditor = vscode.window.activeTextEditor as vscode.TextEditor;
         path = pathUtil.normalize( vscode.window.activeTextEditor.document.fileName);
       }catch(e){}
     }
@@ -196,16 +198,30 @@ export class VsUtil {
     }
     return path;
   };
+  getWorkspacePath (){
+    let folders = vscode.workspace.workspaceFolders;
+    if(folders && folders.length) {
+      return pathUtil.normalize(folders[0].uri.fsPath);
+    }
+  };
+  ///
   save (cb?: ((arg0: boolean | undefined) => void) | undefined){
     var dirty = this.isDirty();
     if(dirty)
     {
+      vscode.window.activeTextEditor = vscode.window.activeTextEditor as vscode.TextEditor;
       vscode.window.activeTextEditor.document.save().then(function(result){
         if(cb){cb(result);}
       });
     }
-    else if(dirty === false) {cb(true);}
-    else if(cb) {cb();}
+    else if(dirty === false) {
+      cb = cb as  ((arg0: boolean | undefined) => void);
+      cb(true);
+    }
+    else if(cb) {
+      let cb2 = cb as ((arg0?: boolean | undefined) => void);
+      cb2();
+    }
   };
   ///
   getActiveFileName (){
@@ -231,15 +247,15 @@ export class VsUtil {
   getFileItemForPick (path : String , filter : undefined , cb: (arg0: any) => void){
     if(arguments.length === 2)
     {
-      cb = filter;
+      //cb = filter;
       filter = undefined;
     }
     fileUtil.ls(path, function(err: any, files: any){
-      cb( this.makePickItemForFile( files, filter ) );
+      //cb( this.makePickItemForFile( files, filter ) );
     });
   };
   ///
-  makePickItemForFile ( list: string | any , filter: any ){
+  makePickItemForFile ( list?: string | any , filter?: any ){
     var arr = [];
     for(var i=0; i<list.length; i++)
     {
