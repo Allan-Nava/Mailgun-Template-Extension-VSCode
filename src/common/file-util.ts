@@ -11,14 +11,9 @@
 ///
 'use strict';
 import * as fs from 'fs';
-import * as fse from 'fs-extra';
+//import * as fse from 'fs-extra';
 import { PathUtil } from './path-util';
 let pathUtil = new PathUtil();
-//import * as fse from 'fse-extra';
-//let fs      = require('fs');
-//let fse     = require('fs-extra');
-//let loop    = require('easy-loop');
-//let pathUtil = require('./path-util');
 ///
 export class FileUtil {
     ///
@@ -52,16 +47,16 @@ export class FileUtil {
         this.exist(path, function(result){
             if(!result)
             {
-                fse.mkdirs(path, function(err: any) {
+                /*fse.mkdirs(path, function(err: any) {
                     if(cb)cb(err);
-                });
+                });*/
             }
             //else if(cb){ cb() };
         });
     }
     ///
     mkdirSync ( path: any ){
-        if(!this.existSync(path)) fse.mkdirsSync(path);
+        //if(!this.existSync(path)) fse.mkdirsSync(path);
     }
     ///
     ls ( path: any, cb: { (err: any, sublist: any): void; (arg0: any, arg1: any[]): void; }, isRecursive: any ){
@@ -185,7 +180,7 @@ export class FileUtil {
         return fs.writeFileSync(path, data);
     }
     ///
-    rm (path: any, cb: { (): void; (): void; }){
+    rm (path: any, cb?: { (): void; (): void; }){
         // fse.remove(path, function(err){
         // 	if(cb)cb();
         // });

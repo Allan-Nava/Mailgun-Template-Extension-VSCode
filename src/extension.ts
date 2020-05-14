@@ -10,12 +10,16 @@
  *--------------------------------------------------------*/
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode 		from 'vscode';
 ///
-//var commonUtil 		= require('./common/common-util');
-//var vsUtil 			= require('./common/vs-util');
-//var fileUtil 		= require('./common/file-util');
-//var cryptoUtil 		= require('./common/crypto-util');
+import{ VsUtil }  		from './common/vs-util';
+import{ CommonUtil }  	from './common/common-util';
+import { FileUtil }		from './common/file-util';
+//import { CryptoUtil} 	from './common/crypto-util';
+var commonUtil 	= new CommonUtil();
+var vsUtil 		= new VsUtil();
+var fileUtil	= new FileUtil();
+//var cryptoUtil 	= new CryptoUtil();
 ///
 var outputChannel 	= null;
 ///
@@ -25,15 +29,15 @@ const CONFIG_MAILGUN_WORKSPACE_TEMP	= "mailgun-workspace-temp";
 let CONFIG_PATH: String, CONFIG_PATH_TEMP: any, WAIT_COPY_PATH, REMOTE_WORKSPACE_TEMP_PATH;
 ///
 ///
-/*
+
 function moveOldConfigFile(){
 	let oldConfig = vsUtil.getOldConfigPath(CONFIG_NAME);
 	if(!fileUtil.existSync(CONFIG_PATH) && fileUtil.existSync(oldConfig)) {
 	  fileUtil.copy(oldConfig, CONFIG_PATH, (e: any) => {
-		if(!e){fileUtil.rm(oldConfig);}
+		if(!e){fileUtil.rm(oldConfig as any);}
 	  });
 	}
-}*/
+}
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -41,14 +45,14 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	//var mg = new Mailgun('api-key');
-	//vsUtil.setContext(context);
+	vsUtil.setContext(context);
 	///
-	//var subscriptions 	= [];
-	//outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
-	//CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
-	//CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
+	var subscriptions 	= [];
+	outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
+	CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
+	CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
 	// REMOTE_TEMP_PATH = vsUtil.getConfigPath(CONFIG_FTP_TEMP);
-	//moveOldConfigFile();
+	moveOldConfigFile();
 	//console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
 	//console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
 	// destroy(true);
@@ -103,7 +107,6 @@ vscode.window.onDidChangeActiveTextEditor(function(event){
 	console.log("onDidChangeActiveTextEditor "+event);
 });
 ///
-/*
 function setDefaultConfig(config: string | any[]){
 	for(var i=0; i<config.length; i++)
 	{
@@ -134,11 +137,11 @@ function initConfig(){
 		  json = { name:"MY_API_KEY", };
 		  writeConfigFile(json);
 		}else{
-		  vsUtil.error("Check mailgun-upload-template-vscode config file syntax.");
-		   fileUtil.writeFile(CONFIG_PATH_TEMP, json, function(){
-			 vsUtil.openTextDocument(CONFIG_PATH_TEMP);
-		   });
-		  result = false;
+		  	vsUtil.error("Check mailgun-upload-template-vscode config file syntax.");
+		   	fileUtil.writeFile(CONFIG_PATH_TEMP, json, function(){
+			 	vsUtil.openTextDocument(CONFIG_PATH_TEMP);
+		   	});
+		  	result = false;
 		}
 	  }   
 	}
@@ -153,4 +156,4 @@ function getConfig(){
 		json = config.json;
 	}
 	return json;
-}*/
+}

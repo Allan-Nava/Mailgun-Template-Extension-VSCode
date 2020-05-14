@@ -11,11 +11,10 @@
 /* eslint-disable eqeqeq */
 'use strict';
 ///
-/*
 import vscode   = require('vscode');
 import path     = require('path');
 import os       = require('os');
-import filesize = require('filesize');
+import fs       = require('fs');
 import { Context } from 'vm';
 var homeDir     = os.homedir();
 ///
@@ -27,17 +26,17 @@ var pathUtil    = new PathUtil();
 var commonUtil  = new CommonUtil();
 var fileUtil    = new FileUtil();
 ///
-
 export class VsUtil {
   ///
   context!                : vscode.ExtensionContext;
   workSpaceConfiguration! : vscode.WorkspaceConfiguration;
+  channels = {} as any;
   ///
   setContext( con : vscode.ExtensionContext ){
       this.context = con;
   };  
   ///
-  getOldConfigPath ( filename : vscode.TextDocument ){
+  getOldConfigPath ( filename : string ){
     // eslint-disable-next-line eqeqeq
     var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? pathUtil.join(homeDir, '.config') : '/var/local');
     if(/^[A-Z]\:[/\\]/.test(folder)) {folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);}
@@ -46,11 +45,30 @@ export class VsUtil {
     return pathUtil.join(folder, path, filename ? filename : "");
   }
   ///
-  getConfigPath ( filename : vscode.TextDocument ){
+  getOutputChannel( name : string ){
+    return this.channels[name] ? this.channels[name] : this.channels[name] = vscode.window.createOutputChannel(name);
+  }
+  ///
+  getConfig (filename : string , pipe? : any ){
+    var val;
+    if(this.existConfig(filename))
+    {
+      var path = this.getConfigPath(filename);
+      val = fs.readFileSync(path).toString();
+      if(pipe) {
+        try{
+          val = pipe(val);
+        }catch(e){throw e;}
+      }
+    }
+    return val;
+  }
+  ///
+  getConfigPath ( filename : string  ){
     return pathUtil.join( this.context.globalStoragePath , filename ? filename : "");
   }
   ///
-  existConfig( filename : vscode.TextDocument){
+  existConfig( filename : string ){
       // var result = true;
       return fileUtil.existSync(this.getConfigPath(filename));
   }
@@ -124,7 +142,7 @@ export class VsUtil {
     return p;
   }
   ///
-  error (msg: string, btn: string, cb: (arg0: string | undefined) => void){
+  error (msg: string, btn?: string, cb?: (arg0: string | undefined) => void){
     if(btn)  {var p = vscode.window.showErrorMessage(msg, btn);}
     else     {var p = vscode.window.showErrorMessage(msg);}
     if(cb)
@@ -267,7 +285,11 @@ export class VsUtil {
     for(var i=0; i<list.length; i++)
     {
       if(!filter || filter === list[i].type.toUpperCase())
-        {arr.push({label:list[i].name, description:"TYPE : " + (list[i].type.toUpperCase() == "D" ? "Directory" : "File") + ", DATE : "+list[i].date.toLocaleString() + ", SIZE : " + filesize(list[i].size), type:list[i].type.toUpperCase()});}
+      {
+        var file = list[i].size ;
+        console.log(file);
+        arr.push({label:list[i].name, description:"TYPE : " + (list[i].type.toUpperCase() == "D" ? "Directory" : "File") + ", DATE : "+list[i].date.toLocaleString() + ", SIZE : " + file, type:list[i].type.toUpperCase()});
+      }
     }
     arr.sort(function(a,b){
       if(a.type < b.type || a.type == b.type && a.label < b.label) {return -1;}
@@ -318,6 +340,19 @@ export class VsUtil {
     vscode.commands.executeCommand('vscode.openFolder', uri, isNew ? true : false);
   };
   ////
+  openTextDocument (p: vscode.Uri, column?: number | undefined, cb?: (() => void) | undefined){
+    /*if(typeof isNotShow === 'function') 
+    {
+      //cb = column;
+      column = 1;
+    }*/
+    if(!column) {column = 1;}
+    vscode.workspace.openTextDocument(p).then(function (doc) {
+      vscode.window.showTextDocument(doc, column).then(function(){
+        if(cb) {cb();}
+      });
+    });
+  };
+  ///
 }
 ///
-*/
