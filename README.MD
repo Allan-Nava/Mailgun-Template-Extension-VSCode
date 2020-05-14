@@ -2,7 +2,27 @@
 
 https://www.mailgun.com/homepage/
 
-This is the README for your extension "mailgun-upload-template-vscode". After writing up a brief description, we recommend including the following sections.
+# Functions
+- Upload template to mailgun 
+
+# Available commands
+- Config - Set the mailgun connection information.
+
+# Startup Settings
+1. Press 'F1'
+2. Enter 'Mailgun'
+3. Pick 'CONFIG'
+4. Enter Mailgun connection information and save
+
+# Config setting example
+
+* API_KEY - string - Mailgun api key.
+
+```
+{
+    "API_KEY": "MY_API_KEY_MAILGUN"
+}
+```
 
 ## Features
 

@@ -23,7 +23,8 @@ var fileUtil    = require('./file-util');
 ///
 export class VsUtil {
   ///
-  context!: vscode.ExtensionContext;
+  context!                : vscode.ExtensionContext;
+  workSpaceConfiguration! : vscode.WorkspaceConfiguration;
   ///
   setContext( con : vscode.ExtensionContext ){
       this.context = con;
@@ -78,7 +79,7 @@ export class VsUtil {
     return p;
   };
   ///
-  msg (msg: string, btn: string | undefined, cb: ((arg0: string | undefined) => void) | undefined){
+  msg (msg: string, btn?: string | undefined, cb?: ((arg0: string | undefined) => void) | undefined){
     var p = btn ? vscode.window.showInformationMessage(msg, btn) : vscode.window.showInformationMessage(msg);
     if(cb)
     {
@@ -89,7 +90,7 @@ export class VsUtil {
     return p;
   }
   ///
-  info (msg: string, btn: string | undefined, cb: ((arg0: string | undefined) => void) | undefined){
+  info (msg: string, btn?: string | undefined, cb?: ((arg0: string | undefined) => void) | undefined){
     var p = btn ? vscode.window.showInformationMessage(msg, btn) : vscode.window.showInformationMessage(msg);
     if(cb)
     {
@@ -129,7 +130,9 @@ export class VsUtil {
   ///
   isChangeTextDocument( uri: string ){
     var arr = this.getActiveFilePathAll();
-    if(/\.git$/.test(uri)) uri = uri.substring(0, uri.length - 4);
+    if(/\.git$/.test(uri)) { 
+      uri = uri.substring(0, uri.length - 4);
+    };
     return arr.indexOf(uri) == -1;
   };
   ///
@@ -156,7 +159,7 @@ export class VsUtil {
     return vscode.window.activeTextEditor ? vscode.window.activeTextEditor.document.isDirty : undefined;
   };
   ///
-  getActiveFilePath ( item: any  ){
+  getActiveFilePath ( item?: any  ){
     var path = "";
     if(item && item.fsPath)
     {
@@ -193,7 +196,7 @@ export class VsUtil {
     }
     return path;
   };
-  save (cb: ((arg0: boolean | undefined) => void) | undefined){
+  save (cb?: ((arg0: boolean | undefined) => void) | undefined){
     var dirty = this.isDirty();
     if(dirty)
     {
@@ -212,16 +215,82 @@ export class VsUtil {
   };
   ///
   getConfiguration ( key: string ){
-    var arr = key.split(".");
-    var parent = arr.splice(0, arr.length - 1).join(".");
-    var o = vscode.workspace.getConfiguration(parent);
+    ///
+    var arr     = key.split(".");
+    var parent  = arr.splice(0, arr.length - 1).join(".");
+    var o       = vscode.workspace.getConfiguration(parent);
     if(o)
     {
-      o = o.get(arr[0]);
+      this.workSpaceConfiguration = o.get(arr[0]) as vscode.WorkspaceConfiguration;
     }
-    else o = null;
+    // need to be fixed
+    //else{} this.workSpaceConfiguration = null;
     return o;
   }
   ///
+  getFileItemForPick (path : String , filter : undefined , cb: (arg0: any) => void){
+    if(arguments.length === 2)
+    {
+      cb = filter;
+      filter = undefined;
+    }
+    fileUtil.ls(path, function(err: any, files: any){
+      cb( this.makePickItemForFile( files, filter ) );
+    });
+  };
+  ///
+  makePickItemForFile ( list: string | any , filter: any ){
+    var arr = [];
+    for(var i=0; i<list.length; i++)
+    {
+      if(!filter || filter === list[i].type.toUpperCase())
+        arr.push({label:list[i].name, description:"TYPE : " + (list[i].type.toUpperCase() == "D" ? "Directory" : "File") + ", DATE : "+list[i].date.toLocaleString() + ", SIZE : " + filesize(list[i].size), type:list[i].type.toUpperCase()});
+    }
+    arr.sort(function(a,b){
+      if(a.type < b.type || a.type == b.type && a.label < b.label) return -1;
+      if(a.type > b.type || a.type == b.type && a.label > b.label) return 1;
+      return 0;
+    });
+    return arr;
+  };
+  ////
+  addItemForFile (list: ConcatArray<{ label: string; description: string; }>, addItems: string | any[], nowPath: string | any[], rootPath: string | any[]){
+    if(addItems && nowPath && (addItems instanceof Array || addItems === "."))
+    {
+      if(addItems === ".")
+      {
+        addItems = [{label:".", description:"Current directory : " + nowPath}];
+      }
+      else
+      {
+        for(var i in addItems)
+        {
+          if(typeof addItems[i] === "string") addItems[i] = {label:addItems[i]};
+          if(addItems[i].label == ".")
+          {
+            addItems[i].description = "Current directory : " + nowPath;
+          }
+          else if(addItems[i].label == "*")
+          {
+            addItems[i].description = "Current all files : " + nowPath + "/**";
+          }
+        }
+      }
+      list = addItems.concat(list);
+    }
+    else if(arguments.length === 3 && typeof addItems === 'string')
+    {
+      rootPath = nowPath;
+      nowPath = addItems;
+    }
+    if(nowPath && rootPath && nowPath.length > rootPath.length) list = [{label:"..", description:"Go to parent directory : " + pathUtil.getParentPath(nowPath)}].concat(list);
+    return list;
+  };
+  ////
+  openFolder ( path: string, isNew: any ){
+    var uri = vscode.Uri.file(path);
+    vscode.commands.executeCommand('vscode.openFolder', uri, isNew ? true : false);
+  };
+  ////
 }
 ///
