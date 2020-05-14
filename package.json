@@ -85,6 +85,7 @@
 		"mailgun": "^0.5.0",
 		"os": "^0.1.1",
 		"path": "^0.12.7",
+		"request-promise": "^4.2.5",
 		"supports-color": "^7.1.0"
 	}
 }
