@@ -3,7 +3,7 @@
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  14/05/2020.
+ * Updated  15/05/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -11,15 +11,16 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode 		from 'vscode';
+//import * as crypto 		from 'crypto';
 ///
 import{ VsUtil }  		from './common/vs-util';
 import{ CommonUtil }  	from './common/common-util';
 import { FileUtil }		from './common/file-util';
-//import { CryptoUtil} 	from './common/crypto-util';
+import { CryptoUtil} 	from './common/crypto-util';
 var commonUtil 	= new CommonUtil();
 var vsUtil 		= new VsUtil();
 var fileUtil	= new FileUtil();
-//var cryptoUtil 	= new CryptoUtil();
+var cryptoUtil 	= new CryptoUtil();
 ///
 var outputChannel 	= null;
 ///
@@ -91,8 +92,8 @@ export function activate(context: vscode.ExtensionContext) {
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
 		console.log("item:", item);
 		///
-		//var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
-    	//console.log("localFilePath:",localFilePath);
+		var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
+    	console.log("localFilePath:",localFilePath);
 		///
 	});
 	/// Added the upload template command
