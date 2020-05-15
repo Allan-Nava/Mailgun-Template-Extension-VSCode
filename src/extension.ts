@@ -25,7 +25,7 @@ var cryptoUtil 	= new CryptoUtil();
 var outputChannel 	= null;
 ///
 //var Mailgun = require('mailgun').Mailgun;
-const CONFIG_NAME 					= "mailgun-simple.json";
+const CONFIG_NAME 					= "mailgun-config.json";
 const CONFIG_MAILGUN_WORKSPACE_TEMP	= "mailgun-workspace-temp";
 let CONFIG_PATH: String, CONFIG_PATH_TEMP: any, WAIT_COPY_PATH, REMOTE_WORKSPACE_TEMP_PATH;
 ///
