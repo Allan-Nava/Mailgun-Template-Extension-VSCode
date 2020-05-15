@@ -14,10 +14,10 @@ import * as vscode 		from 'vscode';
 //import * as crypto 		from 'crypto';
 ///
 import{ VsUtil }  		from './common/vs-util';
-import{ CommonUtil }  	from './common/common-util';
+//import{ CommonUtil }  	from './common/common-util';
 import { FileUtil }		from './common/file-util';
 import { CryptoUtil} 	from './common/crypto-util';
-var commonUtil 	= new CommonUtil();
+//var commonUtil 	= new CommonUtil();
 var vsUtil 		= new VsUtil();
 var fileUtil	= new FileUtil();
 var cryptoUtil 	= new CryptoUtil();
@@ -49,13 +49,13 @@ export function activate(context: vscode.ExtensionContext) {
 	vsUtil.setContext(context);
 	///
 	var subscriptions 	= [];
-	outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
-	CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
-	CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
+	//outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
+	//CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
+	//CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
 	// REMOTE_TEMP_PATH = vsUtil.getConfigPath(CONFIG_FTP_TEMP);
-	moveOldConfigFile();
-	//console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
-	//console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
+	//moveOldConfigFile();
+	console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
+	console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
 	// destroy(true);
 
 	// The command has been defined in the package.json file
@@ -74,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
-		//console.log(JSON.stringify(vscode.workspace.getConfiguration('hello')));
+		console.log(JSON.stringify(vscode.workspace.getConfiguration('hello')));
 		/*var configSet = initConfig();
 		if(configSet.result){
 		  fileUtil.writeFile(CONFIG_PATH_TEMP, JSON.stringify(configSet.json, null, '\t'), function(){

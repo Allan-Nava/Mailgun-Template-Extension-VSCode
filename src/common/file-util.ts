@@ -219,9 +219,9 @@ export class FileUtil {
     }
     copy (orgPath?: any, destPath?: any, cb?: (arg0: any) => void) {
         var copy = function(e: undefined){
-            fse.copy(orgPath, destPath, function(err: any){
+            /*fse.copy(orgPath, destPath, function(err: any){
                 if(cb) cb(err);
-            });
+            });*/
         };
         var parent = pathUtil.getParentPath(destPath);
         //if(parent != destPath) fse.ensureDir(parent, copy);

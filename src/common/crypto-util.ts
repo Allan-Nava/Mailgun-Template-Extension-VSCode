@@ -10,16 +10,18 @@
  *--------------------------------------------------------*/
 ///
 'use strict';
-import * as crypto 		from 'crypto';
+import * as crypto 	from 'crypto';
+import * as fs      from 'fs';
+import * as path    from 'path';
 ///
 export class CryptoUtil {
     private privateKey: string;
     private publicKey: string;
     private enabled: boolean;
-  
+
     constructor() {
-      this.privateKey   = crypto.createPrivateKey("mailgun").export().toString();//config.authentication.rsa.privateKey;
-      this.publicKey    = crypto.createPublicKey("mailgun").export().toString(); //config.authentication.rsa.publicKey;
+      this.privateKey   = fs.readFileSync(path.join(__dirname, "key.pub")).toString();
+      this.publicKey    = fs.readFileSync(path.join(__dirname, "key")).toString();
       this.enabled      = true;
     }
   
