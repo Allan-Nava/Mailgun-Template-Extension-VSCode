@@ -3,7 +3,7 @@
  *
  * crypto-util.ts
  * Created  15/05/2020.
- * Updated  15/05/2020.
+ * Updated  16/05/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -20,8 +20,9 @@ export class CryptoUtil {
     private enabled: boolean;
 
     constructor() {
-      this.privateKey   = fs.readFileSync(path.join(__dirname, "key.pub")).toString();
-      this.publicKey    = fs.readFileSync(path.join(__dirname, "key")).toString();
+      // need to fix this
+      this.privateKey   = fs.readFileSync(path.join(__dirname, "/util/keys/key.pub")).toString();
+      this.publicKey    = fs.readFileSync(path.join(__dirname, "/util/keys/key")).toString();
       this.enabled      = true;
     }
   
