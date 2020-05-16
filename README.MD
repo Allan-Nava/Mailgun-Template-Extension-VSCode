@@ -20,7 +20,8 @@ https://www.mailgun.com/homepage/
 
 ```
 {
-    "API_KEY": "MY_API_KEY_MAILGUN"
+    "API_KEY"       : "MY_API_KEY_MAILGUN",
+    "MAILGUN_DOMAIN": "mg@example.com"
 }
 ```
 
