@@ -7,6 +7,7 @@ https://www.mailgun.com/homepage/
 
 # Available commands
 - Config - Set the mailgun connection information.
+- Upload - Upload the file html to Mailgun.
 
 # Startup Settings
 1. Press 'F1'
