@@ -16,11 +16,11 @@ import * as vscode 		from 'vscode';
 import{ VsUtil }  		from './common/vs-util';
 //import{ CommonUtil }  	from './common/common-util';
 import { FileUtil }		from './common/file-util';
-import { CryptoUtil} 	from './common/crypto-util';
+//import { CryptoUtil} 	from './common/crypto-util';
 //var commonUtil 	= new CommonUtil();
 var vsUtil 		= new VsUtil();
 var fileUtil	= new FileUtil();
-var cryptoUtil 	= new CryptoUtil();
+//var cryptoUtil 	= new CryptoUtil();
 ///
 var outputChannel 	= null;
 ///
@@ -118,14 +118,14 @@ function setDefaultConfig(config: string | any[]){
 	return config;
 }
 function writeConfigFile( json: any ){
-	fileUtil.writeFileSync(CONFIG_PATH, cryptoUtil.encrypt(JSON.stringify(json, null, '\t')));
+	//fileUtil.writeFileSync(CONFIG_PATH, cryptoUtil.encrypt(JSON.stringify(json, null, '\t')));
 	fileUtil.rm(CONFIG_PATH_TEMP);
 }
 function initConfig(){
 	var result = true;
 	var json = vsUtil.getConfig(CONFIG_NAME);
 	try{
-	  json = cryptoUtil.decrypt(json);
+	  //json = cryptoUtil.decrypt(json);
 	  json = JSON.parse(json);
 	}catch(e){
 	  //
