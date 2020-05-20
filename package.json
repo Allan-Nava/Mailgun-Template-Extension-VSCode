@@ -11,7 +11,7 @@
 	"repository": {
 		"url" : "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode",
 		"type": "git"
-	}
+	},
 	"engines": {
 		"vscode": "^1.45.0"
 	},
