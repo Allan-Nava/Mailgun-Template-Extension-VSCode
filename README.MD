@@ -1,6 +1,5 @@
 # Mailgun Upload Template Vscode README
 
-[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/G2G41PVE4)
 
 https://www.mailgun.com/homepage/
 
