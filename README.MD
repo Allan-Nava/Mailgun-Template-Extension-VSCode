@@ -1,5 +1,6 @@
 # Mailgun Upload Template Vscode README
 
+
 https://www.mailgun.com/homepage/
 
 # Functions
@@ -7,6 +8,7 @@ https://www.mailgun.com/homepage/
 
 # Available commands
 - Config - Set the mailgun connection information.
+- Upload - Upload the file html to Mailgun.
 
 # Startup Settings
 1. Press 'F1'
@@ -20,7 +22,8 @@ https://www.mailgun.com/homepage/
 
 ```
 {
-    "API_KEY": "MY_API_KEY_MAILGUN"
+    "API_KEY"       : "MY_API_KEY_MAILGUN",
+    "MAILGUN_DOMAIN": "mg@example.com"
 }
 ```
 
