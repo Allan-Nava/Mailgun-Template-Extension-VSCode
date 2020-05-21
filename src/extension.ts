@@ -3,97 +3,77 @@
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  15/05/2020.
+ * Updated  21/05/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
  *--------------------------------------------------------*/
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import * as vscode 		from 'vscode';
-//import * as crypto 		from 'crypto';
-///
-import{ VsUtil }  		from './common/vs-util';
-//import{ CommonUtil }  	from './common/common-util';
-import { FileUtil }		from './common/file-util';
-import { CryptoUtil} 	from './common/crypto-util';
-//var commonUtil 	= new CommonUtil();
-var vsUtil 		= new VsUtil();
-var fileUtil	= new FileUtil();
-var cryptoUtil 	= new CryptoUtil();
-///
-var outputChannel 	= null;
+import {
+	commands,
+	ExtensionContext,
+	InputBoxOptions,
+	OpenDialogOptions,
+	Uri,
+	window,
+	workspace
+} from 'vscode';
+import * as _ from "lodash";
+import * as mkdirp from "mkdirp";
+import { existsSync, lstatSync, writeFile } from "fs";
+import { getConfigTemplate } from './templates';
 ///
 //var Mailgun = require('mailgun').Mailgun;
-const CONFIG_NAME 					= "mailgun-config.json";
-const CONFIG_MAILGUN_WORKSPACE_TEMP	= "mailgun-workspace-temp";
-let CONFIG_PATH: String, CONFIG_PATH_TEMP: any, WAIT_COPY_PATH, REMOTE_WORKSPACE_TEMP_PATH;
+const CONFIG_NAME = "mailgun-config.json";
+const CONFIG_PATH = `${workspace.workspaceFolders}/${CONFIG_NAME}.json`;
 ///
 ///
-
-function moveOldConfigFile(){
-	let oldConfig = vsUtil.getOldConfigPath(CONFIG_NAME);
-	if(!fileUtil.existSync(CONFIG_PATH) && fileUtil.existSync(oldConfig)) {
-	  fileUtil.copy(oldConfig, CONFIG_PATH, (e: any) => {
-		if(!e){fileUtil.rm(oldConfig as any);}
-	  });
-	}
-}
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export function activate(context: ExtensionContext) {
 	// Use the console to output diagnostic information (console.log) and errors (console.error)
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
-	//var mg = new Mailgun('api-key');
-	vsUtil.setContext(context);
 	///
-	var subscriptions 	= [];
-	//outputChannel 		= vsUtil.getOutputChannel("mailgun-upload-template-vscode");
-	//CONFIG_PATH 		= vsUtil.getConfigPath(CONFIG_NAME);
-	//CONFIG_PATH_TEMP 	= vsUtil.getConfigPath("mailgun-upload-template-vscode-temp.json");
-	// REMOTE_TEMP_PATH = vsUtil.getConfigPath(CONFIG_FTP_TEMP);
-	//moveOldConfigFile();
-	console.log("mailgun-upload-template-vscode start : ", CONFIG_PATH);
-	console.log("mailgun-upload-template-vscode WorkSpacePath :", vsUtil.getWorkspacePath());
-	// destroy(true);
-
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('mailgun-upload-template-vscode.helloWorld', () => {
+	let disposable = commands.registerCommand('mailgun-upload-template-vscode.helloWorld', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
+		window.showInformationMessage('Hello World from Mailgun Upload Template!');
 	});
 	/// Added the test command
 	context.subscriptions.push(disposable);
 	///
-	let configMailgun = vscode.commands.registerCommand('mailgun-upload-template-vscode.config', () => {
+	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
-		console.log(JSON.stringify(vscode.workspace.getConfiguration('hello')));
-		/*var configSet = initConfig();
-		if(configSet.result){
-		  fileUtil.writeFile(CONFIG_PATH_TEMP, JSON.stringify(configSet.json, null, '\t'), function(){
-			vsUtil.openTextDocument(CONFIG_PATH_TEMP);
-		  });
-		}*/
+		console.log(JSON.stringify(workspace.getConfiguration('hello')));
+		createConfigMailgun();
 	});
 	/// Added the command for creation configMailgun
 	context.subscriptions.push(configMailgun);
 	///
-	let uploadTemplateMailgun = vscode.commands.registerCommand('mailgun-upload-template-vscode.upload', ( item ) => {
+	let uploadTemplateMailgun = commands.registerCommand('mailgun-upload-template-vscode.upload',  async (uri: Uri) => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
-		console.log("item:", item);
+		console.log("uri:", Uri);
 		///
-		var localFilePath = vsUtil.getActiveFilePathAndMsg(item, "Please select a file to upload");
-    	console.log("localFilePath:",localFilePath);
+		let targetDirectory;
+		if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isFile()) {
+			targetDirectory = await promptForTargetDirectory();
+			window.showErrorMessage("Please select a valid file");
+		} else {
+			targetDirectory = uri.fsPath;
+		}
+		///
+		console.log(`targetDirectory ${targetDirectory}`);
 		///
 	});
 	/// Added the upload template command
@@ -104,57 +84,51 @@ export function activate(context: vscode.ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() {}
 ///
-vscode.window.onDidChangeActiveTextEditor(function(event){
+window.onDidChangeActiveTextEditor(function(event){
 	console.log("onDidChangeActiveTextEditor "+event);
 });
 ///
-function setDefaultConfig(config: string | any[]){
-	for(var i=0; i<config.length; i++)
-	{
-	  if(config[i].autosave === undefined) {config[i].autosave = true;}
-	  if(config[i].confirm === undefined) {config[i].confirm = true;}
-	  if(config[i].path === undefined) {config[i].path = "/";}
+async function promptForTargetDirectory(): Promise<string | undefined> {
+	console.log("promptForTargetDirectory()");
+	const options: OpenDialogOptions = {
+	  canSelectMany: false,
+	  openLabel: "Select a folder to create",
+	  canSelectFolders: true
+	};
+  
+	return window.showOpenDialog(options).then(uri => {
+	  if (_.isNil(uri) || _.isEmpty(uri)) {
+		return undefined;
+	  }
+	  return uri[0].fsPath;
+	});
+}
+///
+///
+function createConfigMailgun( ) {
+	//const targetPath 		= `${workspace.workspaceFolders}/${snakeCaseBlocName}.json`;
+	if (existsSync(CONFIG_PATH)) {
+	  throw Error(`${CONFIG_PATH} already exists`);
 	}
-	return config;
-}
-function writeConfigFile( json: any ){
-	fileUtil.writeFileSync(CONFIG_PATH, cryptoUtil.encrypt(JSON.stringify(json, null, '\t')));
-	fileUtil.rm(CONFIG_PATH_TEMP);
-}
-function initConfig(){
-	var result = true;
-	var json = vsUtil.getConfig(CONFIG_NAME);
-	try{
-	  json = cryptoUtil.decrypt(json);
-	  json = JSON.parse(json);
-	}catch(e){
-	  //
-	  try{
-		json = JSON.parse(json);
-		writeConfigFile(json);
-	  }catch(ee){
-		if(json === undefined){
-		  //
-		  json = { name:"MY_API_KEY", };
-		  writeConfigFile(json);
-		}else{
-		  	vsUtil.error("Check mailgun-upload-template-vscode config file syntax.");
-		   	fileUtil.writeFile(CONFIG_PATH_TEMP, json, function(){
-			 	vsUtil.openTextDocument(CONFIG_PATH_TEMP);
-		   	});
-		  	result = false;
+	return new Promise(async (resolve, reject) => {
+	  writeFile(CONFIG_PATH, getConfigTemplate(), "utf8", error => {
+		if (error) {
+		  reject(error);
+		  return;
 		}
-	  }   
-	}
-	json = setDefaultConfig(json);
-	return {result:result, json:json};
+		resolve();
+	  });
+	});
 }
-function getConfig(){
-	var json = {};
-	var config = initConfig();
-	if(config.result)
-	{
-		json = config.json;
-	}
-	return json;
+//
+function createDirectory(targetDirectory: string): Promise<void> {
+	return new Promise((resolve, reject) => {
+	  mkdirp(targetDirectory, { mode: '0777' }).then(made => {
+		  if(made){
+			  return reject(made);
+		  }
+		  resolve();
+	  });
+	});
 }
+///

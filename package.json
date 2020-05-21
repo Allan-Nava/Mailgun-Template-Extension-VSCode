@@ -18,10 +18,6 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "mailgun-upload-template-vscode.helloWorld",
-				"title": "Mailgun : Hello World"
-			},
-			{
 				"command": "mailgun-upload-template-vscode.config",
 				"title": "Mailgun : Config - Mailgun connection setting"
 			},
@@ -34,19 +30,8 @@
 			"explorer/context": [
 				{
 					"command": "mailgun-upload-template-vscode.upload",
-					"group": "mailgun-upload-template-vscode"
-				}
-			],
-			"editor/context": [
-				{
-					"command": "mailgun-upload-template-vscode.upload",
-					"group": "mailgun-upload-template-vscode"
-				}
-			],
-			"editor/title/context": [
-				{
-					"command": "mailgun-upload-template-vscode.upload",
-					"group": "mailgun-upload-template-vscode"
+					"group": "mailgun-upload-template-vscode",
+					"when": "explorerResourceIsFolder"
 				}
 			]
 		}
@@ -61,6 +46,8 @@
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
+		"@types/lodash": "^4.14.152",
+		"@types/mkdirp": "^1.0.0",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.13.6",
 		"@types/vscode": "^1.45.0",

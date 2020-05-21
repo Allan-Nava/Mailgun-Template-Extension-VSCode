@@ -48,4 +48,4 @@ export class CryptoUtil {
   
       return plaintext.toString('utf8');
     }
-  }
+}
