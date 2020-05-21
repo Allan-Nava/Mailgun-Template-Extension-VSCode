@@ -16,7 +16,8 @@
 		"vscode": "^1.45.0"
 	},
 	"categories": [
-		"Other"
+		"Other",
+		"Snippets"
 	],
 	"activationEvents": [
 		"*"
