@@ -106,7 +106,6 @@ async function promptForTargetDirectory(): Promise<string | undefined> {
 ///
 ///
 function createConfigMailgun( ) {
-	//const targetPath 		= `${workspace.workspaceFolders}/${snakeCaseBlocName}.json`;
 	if (existsSync(CONFIG_PATH)) {
 	  throw Error(`${CONFIG_PATH} already exists`);
 	}

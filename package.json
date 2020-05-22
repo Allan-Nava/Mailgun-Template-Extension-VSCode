@@ -2,14 +2,14 @@
 	"name": "mailgun-upload-template-vscode",
 	"displayName": "Mailgun Upload Template",
 	"description": "Easy way to upload mailgun template",
-	"version": "0.0.1",
+	"version": "0.0.11",
 	"publisher": "Allan-Nava",
 	"bugs": {
-	    "url": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode/issues",
-	    "email": "allannava95@gmail.com"
+		"url": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode/issues",
+		"email": "allannava95@gmail.com"
 	},
 	"repository": {
-		"url" : "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode",
+		"url": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode",
 		"type": "git"
 	},
 	"engines": {
@@ -19,6 +19,7 @@
 		"Other",
 		"Snippets"
 	],
+	"icon": "assets/logo.png",
 	"activationEvents": [
 		"*"
 	],
@@ -27,11 +28,13 @@
 		"commands": [
 			{
 				"command": "mailgun-upload-template-vscode.config",
-				"title": "Mailgun : Config - Mailgun connection setting"
+				"title": "Mailgun : Config - Mailgun connection setting",
+				"icon": "assets/logo.png"
 			},
 			{
 				"command": "mailgun-upload-template-vscode.upload",
-				"title": "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server"
+				"title": "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server",
+				"icon": "assets/logo.png"
 			}
 		],
 		"menus": {
@@ -72,6 +75,7 @@
 	},
 	"dependencies": {
 		"@types/fs-extra": "^8.1.0",
+		"axios": "^0.19.2",
 		"crypto": "^1.0.1"
 	}
 }
