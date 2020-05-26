@@ -40,7 +40,7 @@ export class Api {
         this.api = axios.create(config);
 
         this.api.interceptors.request.use((param: AxiosRequestConfig) => ({
-            baseUrl: process.env.API_BASE_URL,
+            baseUrl: BaseAPIUrl, //process.env.API_BASE_URL,
             ...param
         }));
 
