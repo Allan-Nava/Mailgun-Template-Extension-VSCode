@@ -3,7 +3,7 @@
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  21/05/2020.
+ * Updated  27/05/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -44,6 +44,7 @@ export function activate(context: ExtensionContext) {
 		// Display a message box to the user
 		window.showInformationMessage('Hello World from Mailgun Upload Template!');
 	});
+	console.log("disposable ", disposable);
 	/// Added the test command
 	context.subscriptions.push(disposable);
 	///
@@ -53,8 +54,12 @@ export function activate(context: ExtensionContext) {
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
 		console.log(JSON.stringify(workspace.getConfiguration('hello')));
+
+		// Display a status bar message to show progress
+        window.setStatusBarMessage('Creating the config file ....');
 		createConfigMailgun();
 	});
+	console.log("configMailgun ", configMailgun);
 	/// Added the command for creation configMailgun
 	context.subscriptions.push(configMailgun);
 	///
