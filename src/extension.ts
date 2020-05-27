@@ -70,15 +70,15 @@ export function activate(context: ExtensionContext) {
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
 		console.log("uri:", Uri);
 		///
-		let targetDirectory;
+		let targetFile;
 		if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isFile()) {
-			targetDirectory = await promptForTargetDirectory();
+			targetFile = await promptForTargetFiles();
 			window.showErrorMessage("Please select a valid file");
 		} else {
-			targetDirectory = uri.fsPath;
+			targetFile = uri.fsPath;
 		}
 		///
-		console.log(`targetDirectory ${targetDirectory}`);
+		console.log(`targetDirectory ${targetFile}`);
 		///
 	});
 	/// Added the upload template command
@@ -93,12 +93,13 @@ window.onDidChangeActiveTextEditor(function(event){
 	console.log("onDidChangeActiveTextEditor "+event);
 });
 ///
-async function promptForTargetDirectory(): Promise<string | undefined> {
-	console.log("promptForTargetDirectory()");
+async function promptForTargetFiles(): Promise<string | undefined> {
+	console.log("promptForTargetFiles()");
 	const options: OpenDialogOptions = {
 	  canSelectMany: false,
 	  openLabel: "Select a folder to create",
-	  canSelectFolders: true
+	  canSelectFolders: false,
+	  canSelectFiles: true,
 	};
   
 	return window.showOpenDialog(options).then(uri => {
