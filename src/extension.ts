@@ -23,10 +23,12 @@ import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
 import { existsSync, lstatSync, writeFile } from "fs";
 import { getConfigTemplate } from './templates';
+import { MailgunUtil } from './common/mailgun-util';
 ///
 //var Mailgun = require('mailgun').Mailgun;
 const CONFIG_NAME = "mailgun-config.json";
-const CONFIG_PATH = `${workspace.workspaceFolders}/${CONFIG_NAME}.json`;
+let CONFIG_PATH : string;
+//const CONFIG_PATH = `${workspace.workspaceFolders?.toLocaleString()}/${CONFIG_NAME}.json`;
 ///
 ///
 // this method is called when your extension is activated
@@ -36,6 +38,8 @@ export function activate(context: ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	///
+	CONFIG_PATH = `${workspace.workspaceFolders?.toLocaleString()}/${CONFIG_NAME}`;
+	console.log(CONFIG_PATH);
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
@@ -79,7 +83,14 @@ export function activate(context: ExtensionContext) {
 		}
 		///
 		console.log(`targetDirectory ${targetFile}`);
+		if(! checkConfigFile()){
+			window.showErrorMessage("Please provide your config file!");
+		}
 		///
+		let config = getConfigFile();
+		console.log(config);
+		let mailgun = new MailgunUtil(  "domain",  "" );
+		mailgun.uploadTemplate();
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
@@ -97,7 +108,7 @@ async function promptForTargetFiles(): Promise<string | undefined> {
 	console.log("promptForTargetFiles()");
 	const options: OpenDialogOptions = {
 	  canSelectMany: false,
-	  openLabel: "Select a folder to create",
+	  openLabel: "Select a file to upload",
 	  canSelectFolders: false,
 	  canSelectFiles: true,
 	};
@@ -137,3 +148,17 @@ function createDirectory(targetDirectory: string): Promise<void> {
 	});
 }
 ///
+function checkConfigFile(){
+	if (existsSync(CONFIG_PATH)) {
+		return true;
+	}
+	return false;
+}
+///
+function getConfigFile(){
+	workspace.openTextDocument(CONFIG_PATH).then((document) => {
+		let text = document.getText();
+		console.log("text",text);
+		return text;
+	});
+}
