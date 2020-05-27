@@ -38,7 +38,7 @@ export class MailgunUtil {
   ///
   uploadTemplate(){
     let data = this.requests.post(
-      `https://api.mailgun.net/v3/${domain}/templates`, );
+      `https://api.mailgun.net/v3/${this.domain}/templates`, );
       //auth=("api", "YOUR_API_KEY"),
       //data={'name': 'template.name',
       //      'description': 'template description'})
