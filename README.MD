@@ -26,4 +26,11 @@ This extension allow you to upload easily your templates.
 }
 ```
 
+# Contributing
+Mailgun Template Extension VSCode is 100% free and open source. We encourage and support an active, healthy community that accepts contributions from the public – including you. There are a couple of ways in which you can contribute to the growing community of getwidget.
+
+- Pick up any issue marked with "good first issue"
+- Fix a bug
+- Write and improve some documentation. Documentation is very critical to us. We would appreciate help in adding multiple languages to our docs.
+
 **Enjoy!**
