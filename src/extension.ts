@@ -17,7 +17,8 @@ import {
 	OpenDialogOptions,
 	Uri,
 	window,
-	workspace
+	workspace,
+	ConfigurationTarget
 } from 'vscode';
 import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
@@ -38,8 +39,10 @@ export function activate(context: ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	///
-	CONFIG_PATH = `${workspace.workspaceFolders}/.vscode/${CONFIG_NAME}`;
-	console.log(`CONFIG_PATH ${CONFIG_PATH}`);
+	/// https://github.com/Microsoft/vscode-extension-samples/blob/master/configuration-sample/src/extension.ts
+	console.log(ConfigurationTarget.Workspace);
+	//CONFIG_PATH = `${ConfigurationTarget.Workspace}/.vscode/${CONFIG_NAME}`;
+	//console.log(`CONFIG_PATH ${CONFIG_PATH}`);
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
@@ -63,7 +66,7 @@ export function activate(context: ExtensionContext) {
         window.setStatusBarMessage('Creating the config file ....');
 		createConfigMailgun();
 	});
-	console.log("configMailgun ", configMailgun);
+	//console.log("configMailgun ", configMailgun);
 	/// Added the command for creation configMailgun
 	context.subscriptions.push(configMailgun);
 	///
