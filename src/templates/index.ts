@@ -15,7 +15,7 @@ export function getConfigTemplate(apiKey : string, domain : string): string {
 function getDefaultConfigTemplate(apiKey : string, domain : string) {
 return `{
   "API_KEY": "${apiKey}",
-  "DOMAIN": "${domain}
+  "DOMAIN": "${domain}"
 }
 `;
 }

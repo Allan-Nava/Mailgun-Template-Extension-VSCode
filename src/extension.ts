@@ -57,11 +57,13 @@ export function activate(context: ExtensionContext) {
 			window.showErrorMessage("The api key must not be empty");
 			return;
 		}
+		console.log(`apikey ${apiKey}`);
 		const domain = await promptForMGDomain();
 		if (_.isNil(domain) || domain.trim() === "") {
 			window.showErrorMessage("The mailgun domain must not be empty");
 			return;
 		}
+		console.log(`domain ${domain}`);
 		// Display a status bar message to show progress
         window.setStatusBarMessage('Creating the config file ....');
 		createConfigMailgun( apiKey, domain );
@@ -132,9 +134,13 @@ async function promptForTargetFiles(): Promise<string | undefined> {
 ///
 function createConfigMailgun( apiKey : string, domain : string  ) {
 	console.log(`createConfigMailgun ${CONFIG_PATH}`);
+	// check if exists
 	if (existsSync(CONFIG_PATH)) {
 	  throw Error(`${CONFIG_PATH} already exists`);
 	}
+	domain = domain.trim();
+	apiKey = apiKey.trim();
+	//
 	return new Promise(async (resolve, reject) => {
 	  writeFile(CONFIG_PATH, getConfigTemplate( apiKey, domain ), "utf8", error => {
 		if (error) {
