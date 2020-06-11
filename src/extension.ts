@@ -18,11 +18,13 @@ import {
 	Uri,
 	window,
 	workspace,
-	ConfigurationTarget
+	ConfigurationTarget,
+	version
 } from 'vscode';
 import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
-import { existsSync, lstatSync, writeFile } from "fs";
+import { existsSync, lstatSync, writeFile, fstat } from "fs";
+import { join } from '@fireflysemantics/join';
 import { getConfigTemplate } from './templates';
 import { MailgunUtil } from './common/mailgun-util';
 ///
@@ -39,29 +41,17 @@ export function activate(context: ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	///
+	CONFIG_PATH = getConfigPath(CONFIG_NAME);
 	/// https://github.com/Microsoft/vscode-extension-samples/blob/master/configuration-sample/src/extension.ts
-	console.log(ConfigurationTarget.Workspace);
-	//CONFIG_PATH = `${ConfigurationTarget.Workspace}/.vscode/${CONFIG_NAME}`;
-	//console.log(`CONFIG_PATH ${CONFIG_PATH}`);
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = commands.registerCommand('mailgun-upload-template-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		window.showInformationMessage('Hello World from Mailgun Upload Template!');
-	});
-	console.log("disposable ", disposable);
-	/// Added the test command
-	context.subscriptions.push(disposable);
+	//console.log(ConfigurationTarget.Workspace);
+	console.log(`CONFIG_PATH = ${CONFIG_PATH}`);
 	///
 	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
-		console.log(JSON.stringify(workspace.getConfiguration('hello')));
-
+		//
 		// Display a status bar message to show progress
         window.setStatusBarMessage('Creating the config file ....');
 		createConfigMailgun();
@@ -85,7 +75,7 @@ export function activate(context: ExtensionContext) {
 			targetFile = uri.fsPath;
 		}
 		///
-		console.log(`targetDirectory ${targetFile}`);
+		console.log(`targetFile ${targetFile}`);
 		if(! checkConfigFile()){
 			window.showErrorMessage("Please provide your config file!");
 		}
@@ -126,6 +116,7 @@ async function promptForTargetFiles(): Promise<string | undefined> {
 ///
 ///
 function createConfigMailgun( ) {
+	console.log(`createConfigMailgun ${CONFIG_PATH}`)
 	if (existsSync(CONFIG_PATH)) {
 	  throw Error(`${CONFIG_PATH} already exists`);
 	}
@@ -164,4 +155,12 @@ function getConfigFile(){
 		console.log("text",text);
 		return text;
 	});
+}
+///
+function getConfigPath(filename: any){
+	var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? pathUtil.join(homeDir, '.config') : '/var/local');
+	if(/^[A-Z]\:[/\\]/.test(folder)) folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);
+	var isInsiders  = version.indexOf("insider") > -1;
+	var path = isInsiders ? "/Code - Insiders/User/" : "/Code/User/";
+	return join(folder, path, filename ? filename : "");
 }

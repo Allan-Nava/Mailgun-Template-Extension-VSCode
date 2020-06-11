@@ -41,8 +41,19 @@
 			"explorer/context": [
 				{
 					"command": "mailgun-upload-template-vscode.upload",
-					"group": "mailgun-upload-template-vscode",
-					"when": "explorerResourceIsFolder"
+					"group": "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
 				}
 			]
 		}
@@ -76,6 +87,7 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
+		"@fireflysemantics/join": "^1.0.3",
 		"@types/fs-extra": "^8.1.0",
 		"axios": "^0.19.2",
 		"crypto": "^1.0.1"
