@@ -2,7 +2,7 @@
 	"name": "mailgun-upload-template-vscode",
 	"displayName": "Mailgun Upload Template",
 	"description": "Easy way to upload mailgun template",
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"publisher": "Allan-Nava",
 	"bugs": {
 		"url": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode/issues",
