@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 /*---------------------------------------------------------
  * Mailgun Upload Template VSCode
  *
@@ -88,14 +89,26 @@ export function activate(context: ExtensionContext) {
 		}
 		///
 		console.log(`targetFile ${targetFile}`);
-		if(! checkConfigFile()){
+		if(!checkConfigFile()){
 			window.showErrorMessage("Please provide your config file!");
 		}
+		targetFile  = targetFile as string;
+		let content = await getText(targetFile);
+		if(!content){
+			window.showErrorMessage("Please select a valid file");
+		}
 		///
-		let config = getConfigFile();
-		console.log(config);
-		let mailgun = new MailgunUtil(  "domain",  "" );
-		mailgun.uploadTemplate();
+		let config 		= await getConfigFile();
+		let configJson 	= JSON.parse(config);
+		console.log(`configJson ${JSON.stringify(configJson)} `);
+		let mailgun 	= new MailgunUtil(  configJson.DOMAIN,  configJson.API_KEY );
+		let response    = await mailgun.uploadTemplate( content );
+		console.log(`response ${response}`);
+		if(response.status == 200){
+			window.showInformationMessage(`Mailgun Upload done! ${response.data}`);
+		}else{
+			window.showErrorMessage(`Mailgun Upload error ${response.data}`);
+		}
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
@@ -170,10 +183,18 @@ function checkConfigFile(){
 	return false;
 }
 ///
-function getConfigFile(){
-	workspace.openTextDocument(CONFIG_PATH).then((document) => {
+async function getConfigFile(){
+	return workspace.openTextDocument(CONFIG_PATH).then((document) => {
 		let text = document.getText();
-		console.log("text",text);
+		console.log("getConfigFile",text);
+		return text;
+	});
+}
+///
+async function getText( uri : string ){
+	return workspace.openTextDocument(uri).then((document) => {
+		let text = document.getText();
+		console.log("getText",text);
 		return text;
 	});
 }
