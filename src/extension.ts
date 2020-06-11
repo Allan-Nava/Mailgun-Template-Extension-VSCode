@@ -21,6 +21,7 @@ import {
 	ConfigurationTarget,
 	version
 } from 'vscode';
+import * as os from 'os';
 import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
 import { existsSync, lstatSync, writeFile, fstat } from "fs";
@@ -31,6 +32,7 @@ import { MailgunUtil } from './common/mailgun-util';
 //var Mailgun = require('mailgun').Mailgun;
 const CONFIG_NAME = "mailgun-config.json";
 let CONFIG_PATH : string;
+let homeDir = os.homedir();
 //const CONFIG_PATH = `${workspace.workspaceFolders?.toLocaleString()}/${CONFIG_NAME}.json`;
 ///
 ///
@@ -116,7 +118,7 @@ async function promptForTargetFiles(): Promise<string | undefined> {
 ///
 ///
 function createConfigMailgun( ) {
-	console.log(`createConfigMailgun ${CONFIG_PATH}`)
+	console.log(`createConfigMailgun ${CONFIG_PATH}`);
 	if (existsSync(CONFIG_PATH)) {
 	  throw Error(`${CONFIG_PATH} already exists`);
 	}
@@ -158,7 +160,8 @@ function getConfigFile(){
 }
 ///
 function getConfigPath(filename: any){
-	var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? pathUtil.join(homeDir, '.config') : '/var/local');
+	// eslint-disable-next-line eqeqeq
+	var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? join(homeDir, '.config') : '/var/local');
 	if(/^[A-Z]\:[/\\]/.test(folder)) folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);
 	var isInsiders  = version.indexOf("insider") > -1;
 	var path = isInsiders ? "/Code - Insiders/User/" : "/Code/User/";

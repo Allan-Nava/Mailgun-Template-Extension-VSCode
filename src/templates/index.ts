@@ -13,8 +13,7 @@ export function getConfigTemplate(): string {
     return getDefaultConfigTemplate();
 }
 function getDefaultConfigTemplate() {
-  return `
-{
+return `{
   "API_KEY": "MY_API_KEY_MAILGUN",
   "DOMAIN": "mg@example.com"
 }
