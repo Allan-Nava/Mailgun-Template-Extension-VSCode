@@ -32,6 +32,11 @@
 				"icon": "assets/logo.png"
 			},
 			{
+				"command": "mailgun-upload-template-vscode.get-config",
+				"title": "Mailgun : GET Config - Mailgun connection setting",
+				"icon": "assets/logo.png"
+			},
+			{
 				"command": "mailgun-upload-template-vscode.upload",
 				"title": "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server",
 				"icon": "assets/logo.png"

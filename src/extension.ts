@@ -29,11 +29,9 @@ import { join } from '@fireflysemantics/join';
 import { getConfigTemplate } from './templates';
 import { MailgunUtil } from './common/mailgun-util';
 ///
-//var Mailgun = require('mailgun').Mailgun;
-const CONFIG_NAME = "mailgun-config.json";
+const CONFIG_NAME 	= "mailgun-config.json";
+let homeDir 		= os.homedir();
 let CONFIG_PATH : string;
-let homeDir = os.homedir();
-//const CONFIG_PATH = `${workspace.workspaceFolders?.toLocaleString()}/${CONFIG_NAME}.json`;
 ///
 ///
 // this method is called when your extension is activated
@@ -100,6 +98,11 @@ export function activate(context: ExtensionContext) {
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
 	///
+	let getConfigMailgun = commands.registerCommand('mailgun-upload-template-vscode.get-config', () => {
+		window.showInformationMessage(`The config path is: ${CONFIG_PATH}`);
+	});
+	/// Added the upload template command
+	context.subscriptions.push(getConfigMailgun);
 }
 ///
 // this method is called when your extension is deactivated
