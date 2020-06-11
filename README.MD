@@ -4,9 +4,11 @@ This extension allow you to upload easily your templates.
 
 # Functions
 - Upload template to mailgun 
+- Get config mailgun settings
 
 # Available commands
 - Config - Set the mailgun connection information.
+- Config - GET the mailgun connection information.
 - Upload - Upload the file html to Mailgun.
 
 # Startup Settings
@@ -26,7 +28,13 @@ This extension allow you to upload easily your templates.
 }
 ```
 
+# CHANGELOG 
+
+[CHANGELOG](https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode/blob/master/CHANGELOG.md)
+
+
 # Contributing
+
 Mailgun Template Extension VSCode is 100% free and open source. We encourage and support an active, healthy community that accepts contributions from the public – including you. There are a couple of ways in which you can contribute to the growing community of getwidget.
 
 - Pick up any issue marked with "good first issue"
