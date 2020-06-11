@@ -48,12 +48,22 @@ export function activate(context: ExtensionContext) {
 	//console.log(ConfigurationTarget.Workspace);
 	console.log(`CONFIG_PATH = ${CONFIG_PATH}`);
 	///
-	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', () => {
+	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
 		//
+		const apiKey = await promptForApiKey();
+		if (_.isNil(apiKey) || apiKey.trim() === "") {
+			window.showErrorMessage("The api key must not be empty");
+			return;
+		}
+		const domain = await promptForApiKey();
+		if (_.isNil(domain) || domain.trim() === "") {
+			window.showErrorMessage("The mailgun domain must not be empty");
+			return;
+		}
 		// Display a status bar message to show progress
         window.setStatusBarMessage('Creating the config file ....');
 		createConfigMailgun();
@@ -167,3 +177,20 @@ function getConfigPath(filename: any){
 	var path = isInsiders ? "/Code - Insiders/User/" : "/Code/User/";
 	return join(folder, path, filename ? filename : "");
 }
+///
+function promptForApiKey(): Thenable<string | undefined> {
+	const apiKeyPromptOptions: InputBoxOptions = {
+	  prompt: "API KEY Mailgun",
+	  placeHolder: "API KEY"
+	};
+	return window.showInputBox(apiKeyPromptOptions);
+}
+///
+function promptForMGDomain(): Thenable<string | undefined> {
+	const apiKeyPromptOptions: InputBoxOptions = {
+	  prompt: "Mailgun Domain",
+	  placeHolder: "MG Domain"
+	};
+	return window.showInputBox(apiKeyPromptOptions);
+}
+///
