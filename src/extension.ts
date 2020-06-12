@@ -94,7 +94,8 @@ export function activate(context: ExtensionContext) {
 		}
 		targetFile  	= targetFile as string;
 		templateName 	= targetFile.substring(targetFile.lastIndexOf('/')+1);
-		//templateName	= templateName as string; 
+		templateName 	= templateName.split(".", 1); 
+		templateName	= templateName[0] as string; 
 		console.log(`targetFile ${targetFile} | templateName ${templateName}`);
 		let content 	= await getText(targetFile);
 		if(!content){

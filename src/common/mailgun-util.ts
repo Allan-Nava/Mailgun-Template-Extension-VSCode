@@ -39,7 +39,7 @@ export class MailgunUtil {
   uploadTemplate( content : string , templateName : string ){
     console.log(` uploadTemplate ${content} | template`);
     let data = {
-              'name': `${templateName}`,
+              'name': `template.${templateName}`,
               'description': 'template description',
               'template': content,
               'engine': 'handlebars',
@@ -57,11 +57,11 @@ export class MailgunUtil {
       }
       //config=("api", this.apiKey),
     ).then(function (response) {
-      console.log(`response= ${response.data} | ${response.status}`);
+      console.log(`response= ${response}`);
       return response;
     })
     .catch(function (error) {
-      console.log(`error= ${error.data} | ${error.status}`);
+      console.log(`error= ${error}`);
       return error;
     });
     //console.log(` uploadTemplate status= ${response.status} | data = ${response.data}`);

@@ -13,3 +13,7 @@
 
 - FIX creation of mailgun config 
 - Add get config path
+
+## [v0.0.142] 
+
+- FIX added template name for upload mailgun template
