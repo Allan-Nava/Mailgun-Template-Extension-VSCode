@@ -3,7 +3,7 @@
  *
  * mailgun-util.ts
  * Created  14/05/2020.
- * Updated  11/06/2020.
+ * Updated  12/06/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -36,10 +36,19 @@ export class MailgunUtil {
     
   }
   ///
-  async uploadTemplate( content : string ){
-    console.log(` uploadTemplate ${content}`);
-    let response = await this.requests.post(
+  uploadTemplate( content : string , templateName : string ){
+    console.log(` uploadTemplate ${content} | template`);
+    let data = {
+              'name': `${templateName}`,
+              'description': 'template description',
+              'template': content,
+              'engine': 'handlebars',
+              'comment': 'version comment'
+            };
+    console.log(`data=${JSON.stringify(data)}`);
+    this.requests.post(
       `https://api.mailgun.net/v3/${this.domain}/templates`, 
+      data,
       {
         auth: {
           username: "api",
@@ -47,11 +56,16 @@ export class MailgunUtil {
         }
       }
       //config=("api", this.apiKey),
-    );
-      //data={'name': 'template.name',
-      //      'description': 'template description'})
-    console.log(` uploadTemplate status= ${response.status} | data = ${response.data}`);
-    return response;
+    ).then(function (response) {
+      console.log(`response= ${response.data} | ${response.status}`);
+      return response;
+    })
+    .catch(function (error) {
+      console.log(`error= ${error.data} | ${error.status}`);
+      return error;
+    });
+    //console.log(` uploadTemplate status= ${response.status} | data = ${response.data}`);
+    //return response;
   }
 }
 ///

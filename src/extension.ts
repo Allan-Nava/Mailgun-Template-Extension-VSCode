@@ -4,7 +4,7 @@
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  27/05/2020.
+ * Updated  12/06/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -81,6 +81,7 @@ export function activate(context: ExtensionContext) {
 		console.log("uri:", Uri);
 		///
 		let targetFile;
+		let templateName;
 		if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isFile()) {
 			targetFile = await promptForTargetFiles();
 			window.showErrorMessage("Please select a valid file");
@@ -88,12 +89,14 @@ export function activate(context: ExtensionContext) {
 			targetFile = uri.fsPath;
 		}
 		///
-		console.log(`targetFile ${targetFile}`);
 		if(!checkConfigFile()){
 			window.showErrorMessage("Please provide your config file!");
 		}
-		targetFile  = targetFile as string;
-		let content = await getText(targetFile);
+		targetFile  	= targetFile as string;
+		templateName 	= targetFile.substring(targetFile.lastIndexOf('/')+1);
+		//templateName	= templateName as string; 
+		console.log(`targetFile ${targetFile} | templateName ${templateName}`);
+		let content 	= await getText(targetFile);
 		if(!content){
 			window.showErrorMessage("Please select a valid file");
 		}
@@ -102,13 +105,14 @@ export function activate(context: ExtensionContext) {
 		let configJson 	= JSON.parse(config);
 		console.log(`configJson ${JSON.stringify(configJson)} `);
 		let mailgun 	= new MailgunUtil(  configJson.DOMAIN,  configJson.API_KEY );
-		let response    = await mailgun.uploadTemplate( content );
+		let response    = mailgun.uploadTemplate( content, templateName );
 		console.log(`response ${response}`);
-		if(response.status == 200){
+		window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
+		/*if(response.status == 200){
 			window.showInformationMessage(`Mailgun Upload done! ${response.data}`);
 		}else{
 			window.showErrorMessage(`Mailgun Upload error ${response.data}`);
-		}
+		}*/
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
@@ -202,7 +206,7 @@ async function getText( uri : string ){
 function getConfigPath(filename: any){
 	// eslint-disable-next-line eqeqeq
 	var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? join(homeDir, '.config') : '/var/local');
-	if(/^[A-Z]\:[/\\]/.test(folder)) folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);
+	if(/^[A-Z]\:[/\\]/.test(folder)) {folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);}
 	var isInsiders  = version.indexOf("insider") > -1;
 	var path = isInsiders ? "/Code - Insiders/User/" : "/Code/User/";
 	return join(folder, path, filename ? filename : "");
