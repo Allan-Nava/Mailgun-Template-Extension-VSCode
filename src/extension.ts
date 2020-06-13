@@ -4,7 +4,7 @@
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  12/06/2020.
+ * Updated  13/06/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -106,14 +106,14 @@ export function activate(context: ExtensionContext) {
 		let configJson 	= JSON.parse(config);
 		console.log(`configJson ${JSON.stringify(configJson)} `);
 		let mailgun 	= new MailgunUtil(  configJson.DOMAIN,  configJson.API_KEY );
-		let response    = mailgun.uploadTemplate( content, templateName );
-		console.log(`response ${response}`);
-		window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
-		/*if(response.status == 200){
-			window.showInformationMessage(`Mailgun Upload done! ${response.data}`);
+		let response    = await mailgun.uploadTemplate( content, templateName );
+		console.log(`response ${response} | ${JSON.stringify(response)}`);
+		//window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
+		if(response.status == 200){
+			window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
 		}else{
-			window.showErrorMessage(`Mailgun Upload error ${response.data}`);
-		}*/
+			window.showErrorMessage(`Mailgun Upload error ${JSON.stringify(response)}`);
+		}
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
