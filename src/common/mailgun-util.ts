@@ -10,8 +10,6 @@
  *--------------------------------------------------------*/
 ///
 import { Api } from "./api";
-import { AxiosRequestConfig} from "axios";
-import { Uri } from "vscode";
 ///
 ///
 export class MailgunUtil {
@@ -30,20 +28,14 @@ export class MailgunUtil {
     // need to be added the api key for all requests
   }
   ///
-  getContent(uri : Uri){
-    // need to implement this method
-    //getTextDocument(uri);
-    
-  }
-  ///
   async uploadTemplate( content : string , templateName : string ){
     console.log(` uploadTemplate ${content} | template`);
     let data = {
-              'name': `template.${templateName}`,
+              'name': `${templateName}`,
               'description': 'template description',
               'template': content,
-              'engine': 'handlebars',
-              'comment': 'version comment'
+              //'engine': 'handlebars',
+              //'comment': 'version comment'
             };
     console.log(`data=${JSON.stringify(data)}`);
     return await this.requests.post(
@@ -56,7 +48,7 @@ export class MailgunUtil {
         }
       }
     ).then(function (response) {
-      console.log(`response= ${response}`);
+      console.log(`response= ${response} | ${response.data} | ${response.config}`);
       return response;
       //return response;
     })
