@@ -48,7 +48,8 @@ export class MailgunUtil {
         password: this.apiKey
       },
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json;charset=UTF-8'
+        //'Content-Type': 'application/json'
       }
     };
     console.log(`data=${JSON.stringify(data)} | config ${JSON.stringify(config)}`);
@@ -66,29 +67,6 @@ export class MailgunUtil {
       return error;
       //return error;
     });
-    /*return new Promise(async (resolve, reject) => {
-      this.requests.post(
-        `https://api.mailgun.net/v3/${this.domain}/templates`, 
-        data,
-        {
-          auth: {
-            username: "api",
-            password: this.apiKey
-          }
-        }
-      ).then(function (response) {
-        console.log(`response= ${response}`);
-        return resolve(response);
-        //return response;
-      })
-      .catch(function (error) {
-        console.log(`error= ${error}`);
-        return reject(error);
-        //return error;
-      });
-    });*/
-    //console.log(` uploadTemplate status= ${response.status} | data = ${response.data}`);
-    //return response;
   }
 }
 ///
