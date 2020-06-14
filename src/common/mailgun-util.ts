@@ -3,7 +3,7 @@
  *
  * mailgun-util.ts
  * Created  14/05/2020.
- * Updated  13/06/2020.
+ * Updated  14/06/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -37,16 +37,25 @@ export class MailgunUtil {
               //'engine': 'handlebars',
               //'comment': 'version comment'
             };
-    console.log(`data=${JSON.stringify(data)}`);
+    /*const data = new FormData();
+    data.append('name', `${templateName}`);
+    data.append('description', 'template description');
+    data.append('template', content );*/
+    ///
+    let config = {
+      auth: {
+        username: "api",
+        password: this.apiKey
+      },
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    console.log(`data=${JSON.stringify(data)} | config ${JSON.stringify(config)}`);
     return await this.requests.post(
       `https://api.mailgun.net/v3/${this.domain}/templates`, 
       data,
-      {
-        auth: {
-          username: "api",
-          password: this.apiKey
-        }
-      }
+      config,
     ).then(function (response) {
       console.log(`response= ${response} | ${response.data} | ${response.config}`);
       return response;
