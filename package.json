@@ -2,7 +2,7 @@
 	"name": "mailgun-upload-template-vscode",
 	"displayName": "Mailgun Upload Template",
 	"description": "Easy way to upload mailgun template",
-	"version": "0.0.11",
+	"version": "0.0.144",
 	"publisher": "Allan-Nava",
 	"bugs": {
 		"url": "https://github.com/Allan-Nava/Mailgun-Template-Extension-VSCode/issues",
@@ -32,6 +32,11 @@
 				"icon": "assets/logo.png"
 			},
 			{
+				"command": "mailgun-upload-template-vscode.get-config",
+				"title": "Mailgun : GET Config - Mailgun connection setting",
+				"icon": "assets/logo.png"
+			},
+			{
 				"command": "mailgun-upload-template-vscode.upload",
 				"title": "Mailgun : Upload - Upload the file directly from file locally to Mailgun Server",
 				"icon": "assets/logo.png"
@@ -41,26 +46,39 @@
 			"explorer/context": [
 				{
 					"command": "mailgun-upload-template-vscode.upload",
-					"group": "mailgun-upload-template-vscode",
-					"when": "explorerResourceIsFolder"
+					"group": "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/title/context": [
+				{
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
+				}
+			],
+			"editor/context": [
+				{
+					"command": "mailgun-upload-template-vscode.upload",
+					"group": "mailgun-upload-template-vscode"
 				}
 			]
 		}
 	},
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
+		"vscode:prepublish": "webpack --mode production",
+		"webpack": "webpack --mode development",
+		"webpack-dev": "webpack --mode development --watch",
 		"compile": "tsc -p ./",
 		"lint": "eslint src --ext ts",
-		"watch": "tsc -watch -p ./",
+		"watch": "node ./node_modules/vscode/bin/install",
 		"pretest": "npm run compile && npm run lint",
-		"test": "node ./out/test/runTest.js"
+		"test": "npm run compile && node ./node_modules/vscode/bin/test"
 	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/lodash": "^4.14.152",
 		"@types/mkdirp": "^1.0.0",
 		"@types/mocha": "^7.0.2",
-		"@types/node": "^13.13.6",
+		"@types/node": "^13.13.12",
 		"@types/vscode": "^1.45.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
@@ -74,6 +92,7 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"dependencies": {
+		"@fireflysemantics/join": "^1.0.3",
 		"@types/fs-extra": "^8.1.0",
 		"axios": "^0.19.2",
 		"crypto": "^1.0.1"

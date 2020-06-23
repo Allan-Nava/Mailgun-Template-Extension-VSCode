@@ -3,7 +3,7 @@
  *
  * constants.ts
  * Created  13/05/2020.
- * Updated  22/05/2020.
+ * Updated  11/06/2020.
  * Author   Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
  *--------------------------------------------------------*/
@@ -40,7 +40,6 @@ export class Api {
         this.api = axios.create(config);
 
         this.api.interceptors.request.use((param: AxiosRequestConfig) => ({
-            baseUrl: process.env.API_BASE_URL,
             ...param
         }));
 

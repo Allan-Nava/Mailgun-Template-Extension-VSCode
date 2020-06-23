@@ -1,9 +1,10 @@
+/* eslint-disable eqeqeq */
 /*---------------------------------------------------------
  * Mailgun Upload Template VSCode
  *
  * extension.ts
  * Created  13/05/2020.
- * Updated  21/05/2020.
+ * Updated  14/06/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -17,16 +18,21 @@ import {
 	OpenDialogOptions,
 	Uri,
 	window,
-	workspace
+	workspace,
+	ConfigurationTarget,
+	version
 } from 'vscode';
+import * as os from 'os';
 import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
-import { existsSync, lstatSync, writeFile } from "fs";
+import { existsSync, lstatSync, writeFile, fstat } from "fs";
+import { join } from '@fireflysemantics/join';
 import { getConfigTemplate } from './templates';
+import { MailgunUtil } from './common/mailgun-util';
 ///
-//var Mailgun = require('mailgun').Mailgun;
-const CONFIG_NAME = "mailgun-config.json";
-const CONFIG_PATH = `${workspace.workspaceFolders}/${CONFIG_NAME}.json`;
+const CONFIG_NAME 	= "mailgun-config.json";
+let homeDir 		= os.homedir();
+let CONFIG_PATH : string;
 ///
 ///
 // this method is called when your extension is activated
@@ -36,25 +42,34 @@ export function activate(context: ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "mailgun-upload-template-vscode" is now active!');
 	///
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = commands.registerCommand('mailgun-upload-template-vscode.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		window.showInformationMessage('Hello World from Mailgun Upload Template!');
-	});
-	/// Added the test command
-	context.subscriptions.push(disposable);
+	CONFIG_PATH = getConfigPath(CONFIG_NAME);
+	/// https://github.com/Microsoft/vscode-extension-samples/blob/master/configuration-sample/src/extension.ts
+	//console.log(ConfigurationTarget.Workspace);
+	console.log(`CONFIG_PATH = ${CONFIG_PATH}`);
 	///
-	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', () => {
+	let configMailgun = commands.registerCommand('mailgun-upload-template-vscode.config', async () => {
 		// The code you place here will be executed every time your command is executed
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.config" is now active!');
-		console.log(JSON.stringify(workspace.getConfiguration('hello')));
-		createConfigMailgun();
+		//
+		const apiKey = await promptForApiKey();
+		if (_.isNil(apiKey) || apiKey.trim() === "") {
+			window.showErrorMessage("The api key must not be empty");
+			return;
+		}
+		console.log(`apikey ${apiKey}`);
+		const domain = await promptForMGDomain();
+		if (_.isNil(domain) || domain.trim() === "") {
+			window.showErrorMessage("The mailgun domain must not be empty");
+			return;
+		}
+		console.log(`domain ${domain}`);
+		// Display a status bar message to show progress
+        window.setStatusBarMessage('Creating the config file ....');
+		createConfigMailgun( apiKey, domain );
 	});
+	//console.log("configMailgun ", configMailgun);
 	/// Added the command for creation configMailgun
 	context.subscriptions.push(configMailgun);
 	///
@@ -65,20 +80,49 @@ export function activate(context: ExtensionContext) {
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
 		console.log("uri:", Uri);
 		///
-		let targetDirectory;
+		let targetFile;
+		let templateName;
 		if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isFile()) {
-			targetDirectory = await promptForTargetDirectory();
+			targetFile = await promptForTargetFiles();
 			window.showErrorMessage("Please select a valid file");
 		} else {
-			targetDirectory = uri.fsPath;
+			targetFile = uri.fsPath;
 		}
 		///
-		console.log(`targetDirectory ${targetDirectory}`);
+		if(!checkConfigFile()){
+			window.showErrorMessage("Please provide your config file!");
+		}
+		targetFile  	= targetFile as string;
+		templateName 	= targetFile.substring(targetFile.lastIndexOf('/')+1);
+		templateName 	= templateName.split(".", 1); 
+		templateName	= templateName[0] as string; 
+		console.log(`targetFile ${targetFile} | templateName ${templateName}`);
+		let content 	= await getText(targetFile);
+		if(!content){
+			window.showErrorMessage("Please select a valid file");
+		}
 		///
+		let config 		= await getConfigFile();
+		let configJson 	= JSON.parse(config);
+		console.log(`configJson ${JSON.stringify(configJson)} `);
+		let mailgun 	= new MailgunUtil(  configJson.DOMAIN,  configJson.API_KEY );
+		let response    = await mailgun.uploadTemplate( content, templateName );
+		console.log(`response ${response} | ${JSON.stringify(response)}`);
+		//window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
+		if(response.status == 200){
+			window.showInformationMessage(`Mailgun Upload done! ${JSON.stringify(response)}`);
+		}else{
+			window.showErrorMessage(`Mailgun Upload error ${JSON.stringify(response)}`);
+		}
 	});
 	/// Added the upload template command
 	context.subscriptions.push(uploadTemplateMailgun);
 	///
+	let getConfigMailgun = commands.registerCommand('mailgun-upload-template-vscode.get-config', () => {
+		window.showInformationMessage(`The config path is: ${CONFIG_PATH}`);
+	});
+	/// Added the upload template command
+	context.subscriptions.push(getConfigMailgun);
 }
 ///
 // this method is called when your extension is deactivated
@@ -88,12 +132,13 @@ window.onDidChangeActiveTextEditor(function(event){
 	console.log("onDidChangeActiveTextEditor "+event);
 });
 ///
-async function promptForTargetDirectory(): Promise<string | undefined> {
-	console.log("promptForTargetDirectory()");
+async function promptForTargetFiles(): Promise<string | undefined> {
+	console.log("promptForTargetFiles()");
 	const options: OpenDialogOptions = {
 	  canSelectMany: false,
-	  openLabel: "Select a folder to create",
-	  canSelectFolders: true
+	  openLabel: "Select a file to upload",
+	  canSelectFolders: false,
+	  canSelectFiles: true,
 	};
   
 	return window.showOpenDialog(options).then(uri => {
@@ -105,12 +150,17 @@ async function promptForTargetDirectory(): Promise<string | undefined> {
 }
 ///
 ///
-function createConfigMailgun( ) {
+function createConfigMailgun( apiKey : string, domain : string  ) {
+	console.log(`createConfigMailgun ${CONFIG_PATH}`);
+	// check if exists
 	if (existsSync(CONFIG_PATH)) {
 	  throw Error(`${CONFIG_PATH} already exists`);
 	}
+	domain = domain.trim();
+	apiKey = apiKey.trim();
+	//
 	return new Promise(async (resolve, reject) => {
-	  writeFile(CONFIG_PATH, getConfigTemplate(), "utf8", error => {
+	  writeFile(CONFIG_PATH, getConfigTemplate( apiKey, domain ), "utf8", error => {
 		if (error) {
 		  reject(error);
 		  return;
@@ -129,5 +179,53 @@ function createDirectory(targetDirectory: string): Promise<void> {
 		  resolve();
 	  });
 	});
+}
+///
+function checkConfigFile(){
+	if (existsSync(CONFIG_PATH)) {
+		return true;
+	}
+	return false;
+}
+///
+async function getConfigFile(){
+	return workspace.openTextDocument(CONFIG_PATH).then((document) => {
+		let text = document.getText();
+		console.log("getConfigFile",text);
+		return text;
+	});
+}
+///
+async function getText( uri : string ){
+	return workspace.openTextDocument(uri).then((document) => {
+		let text = document.getText();
+		console.log("getText",text);
+		return text;
+	});
+}
+///
+function getConfigPath(filename: any){
+	// eslint-disable-next-line eqeqeq
+	var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? join(homeDir, '.config') : '/var/local');
+	if(/^[A-Z]\:[/\\]/.test(folder)) {folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);}
+	var isInsiders  = version.indexOf("insider") > -1;
+	var path = isInsiders ? "/Code - Insiders/User/" : "/Code/User/";
+	return join(folder, path, filename ? filename : "");
+}
+///
+function promptForApiKey(): Thenable<string | undefined> {
+	const apiKeyPromptOptions: InputBoxOptions = {
+	  prompt: "API KEY Mailgun",
+	  placeHolder: "API KEY"
+	};
+	return window.showInputBox(apiKeyPromptOptions);
+}
+///
+function promptForMGDomain(): Thenable<string | undefined> {
+	const apiKeyPromptOptions: InputBoxOptions = {
+	  prompt: "Mailgun Domain",
+	  placeHolder: "MG Domain"
+	};
+	return window.showInputBox(apiKeyPromptOptions);
 }
 ///
