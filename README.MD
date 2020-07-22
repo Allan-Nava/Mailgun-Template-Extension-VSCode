@@ -1,4 +1,5 @@
 # Mailgun Upload Template Vscode Extension
+[![Discord Chat](https://img.shields.io/badge/Discord-Chat-important)](https://discord.gg/nMTKrRZ)
 
 This extension allow you to upload easily your templates.
 
