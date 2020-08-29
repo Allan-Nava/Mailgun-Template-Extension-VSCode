@@ -3,7 +3,7 @@
  *
  * mailgun-util.ts
  * Created  14/05/2020.
- * Updated  14/06/2020.
+ * Updated  29/08/2020.
  * Author   Allan Nava.
  * Created by Allan Nava.
  * Copyright (C) Allan Nava. All rights reserved.
@@ -34,8 +34,6 @@ export class MailgunUtil {
               'name': `${templateName}`,
               'description': 'template description',
               'template': content,
-              //'engine': 'handlebars',
-              //'comment': 'version comment'
             };
     /*const data = new FormData();
     data.append('name', `${templateName}`);
