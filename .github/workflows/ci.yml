@@ -24,9 +24,10 @@ jobs:
     # install dependencies using clean install to avoid package lock updates
     - run: npm ci
     # build the project if necessary
-    - run: npm run build --if-present
+    #- run: npm run build --if-present
+    - run: tsc -p ./
     # finally run the tests
-    - run: npm run coverage
+    #- run: npm run coverage
 
     # Save coverage report in Coveralls
     - name: Coveralls
