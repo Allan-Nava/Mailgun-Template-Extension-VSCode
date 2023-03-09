@@ -94,7 +94,7 @@
 	"dependencies": {
 		"@fireflysemantics/join": "^1.0.3",
 		"@types/fs-extra": "^8.1.0",
-		"axios": "^0.21.2",
+		"axios": "^1.0.0",
 		"crypto": "^1.0.1"
 	}
 }
