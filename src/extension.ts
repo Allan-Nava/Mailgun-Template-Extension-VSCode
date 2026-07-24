@@ -23,9 +23,10 @@ import {
 	version
 } from 'vscode';
 import * as os from 'os';
+import * as nodePath from 'path';
 import * as _ from "lodash";
 import * as mkdirp from "mkdirp";
-import { existsSync, lstatSync, writeFile, fstat } from "fs";
+import { existsSync, lstatSync, writeFileSync } from "fs";
 import { join } from '@fireflysemantics/join';
 import { getConfigTemplate } from './templates';
 import { MailgunUtil } from './common/mailgun-util';
@@ -58,7 +59,6 @@ export function activate(context: ExtensionContext) {
 			window.showErrorMessage("The api key must not be empty");
 			return;
 		}
-		console.log(`apikey ${apiKey}`);
 		const domain = await promptForMGDomain();
 		if (_.isNil(domain) || domain.trim() === "") {
 			window.showErrorMessage("The mailgun domain must not be empty");
@@ -67,7 +67,7 @@ export function activate(context: ExtensionContext) {
 		console.log(`domain ${domain}`);
 		// Display a status bar message to show progress
         window.setStatusBarMessage('Creating the config file ....');
-		createConfigMailgun( apiKey, domain );
+		await createConfigMailgun( apiKey, domain );
 	});
 	//console.log("configMailgun ", configMailgun);
 	/// Added the command for creation configMailgun
@@ -78,32 +78,44 @@ export function activate(context: ExtensionContext) {
 		// Display a message box to the user
 		//vscode.window.showInformationMessage('Hello World from Mailgun Upload Template!');
 		console.log('configMailgun Congratulations, your extension "mailgun-upload-template-vscode.upload" is now active!');
-		console.log("uri:", Uri);
+		console.log("uri:", uri);
 		///
 		let targetFile;
 		let templateName;
 		if (_.isNil(_.get(uri, "fsPath")) || !lstatSync(uri.fsPath).isFile()) {
 			targetFile = await promptForTargetFiles();
-			window.showErrorMessage("Please select a valid file");
 		} else {
 			targetFile = uri.fsPath;
 		}
+		/// Bail out if no valid file was provided/selected (e.g. dialog cancelled)
+		if (_.isNil(targetFile)) {
+			window.showErrorMessage("Please select a valid file");
+			return;
+		}
 		///
-		if(!checkConfigFile()){
+		if (!checkConfigFile()) {
 			window.showErrorMessage("Please provide your config file!");
+			return;
 		}
 		targetFile  	= targetFile as string;
-		templateName 	= targetFile.substring(targetFile.lastIndexOf('/')+1);
-		templateName 	= templateName.split(".", 1); 
-		templateName	= templateName[0] as string; 
+		templateName 	= nodePath.basename(targetFile);
+		templateName 	= templateName.split(".", 1);
+		templateName	= templateName[0] as string;
 		console.log(`targetFile ${targetFile} | templateName ${templateName}`);
 		let content 	= await getText(targetFile);
-		if(!content){
-			window.showErrorMessage("Please select a valid file");
+		if (!content) {
+			window.showErrorMessage("The selected file is empty");
+			return;
 		}
 		///
 		let config 		= await getConfigFile();
-		let configJson 	= JSON.parse(config);
+		let configJson;
+		try {
+			configJson 	= JSON.parse(config);
+		} catch (e) {
+			window.showErrorMessage("The mailgun config file is not valid JSON");
+			return;
+		}
 		console.log(`configJson ${JSON.stringify(configJson)} `);
 		let mailgun 	= new MailgunUtil(  configJson.DOMAIN,  configJson.API_KEY );
 		let response    = await mailgun.uploadTemplate( content, templateName );
@@ -128,10 +140,6 @@ export function activate(context: ExtensionContext) {
 // this method is called when your extension is deactivated
 export function deactivate() {}
 ///
-window.onDidChangeActiveTextEditor(function(event){
-	console.log("onDidChangeActiveTextEditor "+event);
-});
-///
 async function promptForTargetFiles(): Promise<string | undefined> {
 	console.log("promptForTargetFiles()");
 	const options: OpenDialogOptions = {
@@ -150,35 +158,22 @@ async function promptForTargetFiles(): Promise<string | undefined> {
 }
 ///
 ///
-function createConfigMailgun( apiKey : string, domain : string  ) {
+async function createConfigMailgun( apiKey : string, domain : string  ) {
 	console.log(`createConfigMailgun ${CONFIG_PATH}`);
 	// check if exists
 	if (existsSync(CONFIG_PATH)) {
-	  throw Error(`${CONFIG_PATH} already exists`);
+	  window.showErrorMessage(`${CONFIG_PATH} already exists`);
+	  return;
 	}
 	domain = domain.trim();
 	apiKey = apiKey.trim();
 	//
-	return new Promise(async (resolve, reject) => {
-	  writeFile(CONFIG_PATH, getConfigTemplate( apiKey, domain ), "utf8", error => {
-		if (error) {
-		  reject(error);
-		  return;
-		}
-		resolve();
-	  });
-	});
+	writeFileSync(CONFIG_PATH, getConfigTemplate( apiKey, domain ), "utf8");
+	window.setStatusBarMessage(`Mailgun config created: ${CONFIG_PATH}`);
 }
 //
-function createDirectory(targetDirectory: string): Promise<void> {
-	return new Promise((resolve, reject) => {
-	  mkdirp(targetDirectory, { mode: '0777' }).then(made => {
-		  if(made){
-			  return reject(made);
-		  }
-		  resolve();
-	  });
-	});
+async function createDirectory(targetDirectory: string): Promise<void> {
+	await mkdirp(targetDirectory, { mode: '0777' });
 }
 ///
 function checkConfigFile(){

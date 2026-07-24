@@ -8,7 +8,6 @@
  * Copyright (C) Allan Nava. All rights reserved.
  *--------------------------------------------------------*/
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
-import { BaseAPIUrl } from './constants';
 /**
  * ES6 Axios Class.
  *

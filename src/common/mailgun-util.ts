@@ -50,7 +50,6 @@ export class MailgunUtil {
         //'Content-Type': 'application/json'
       }
     };
-    console.log(`data=${JSON.stringify(data)} | config ${JSON.stringify(config)}`);
     return await this.requests.post(
       `https://api.mailgun.net/v3/${this.domain}/templates`, 
       data,
