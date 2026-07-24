@@ -36,3 +36,4 @@
 
 - Docs: fix GitHub Pages build — drop the conflicting `theme:` key, pin `remote_theme: just-the-docs/just-the-docs@v0.3.3`, add the `jekyll-remote-theme` plugin
 - Docs: fix `docs/Gemfile` (explicit `source`, use the `github-pages` gem instead of a bare `just-the-docs` dependency)
+- CI: fix `ci.yml` — compile via `npm run compile` (local `tsc`, was calling a global `tsc` that crashed on modern Node), modernize actions (checkout@v4, setup-node@v4, Node 20), add lint step, drop the dead Coveralls step
