@@ -8,3 +8,22 @@ vsc-extension-quickstart.md
 **/.eslintrc.json
 **/*.map
 **/*.ts
+
+# The extension ships as a single webpack bundle (out/extension.js), so the
+# runtime deps are already inlined — never ship node_modules.
+node_modules/**
+
+# Secrets / keypair that must NEVER be packaged (also being removed from git).
+key
+key.pub
+
+# Repo / CI / docs / agent files — not needed inside the published extension.
+.github/**
+.claude/**
+docs/**
+azure-pipelines.yml
+jsconfig.json
+renovate.json
+CLAUDE.md
+AGENTS.md
+SECURITY.md

@@ -3,3 +3,9 @@ node_modules
 .vscode-test/
 *.vsix
 .DS_STORE
+
+# Never commit private keys / secrets
+key
+key.pub
+*.pem
+id_rsa*

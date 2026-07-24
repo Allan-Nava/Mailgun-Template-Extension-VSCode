@@ -37,3 +37,8 @@
 - Docs: fix GitHub Pages build — drop the conflicting `theme:` key, pin `remote_theme: just-the-docs/just-the-docs@v0.3.3`, add the `jekyll-remote-theme` plugin
 - Docs: fix `docs/Gemfile` (explicit `source`, use the `github-pages` gem instead of a bare `just-the-docs` dependency)
 - CI: fix `ci.yml` — compile via `npm run compile` (local `tsc`, was calling a global `tsc` that crashed on modern Node), modernize actions (checkout@v4, setup-node@v4, Node 20), add lint step, drop the dead Coveralls step
+
+## [v0.0.147]
+
+- SECURITY: stop tracking/packaging the `key` / `key.pub` OpenSSH keypair (untracked from git and added to `.gitignore`; the key must also be rotated — see note)
+- Packaging: `.vscodeignore` now excludes `node_modules/**` (the extension is a self-contained webpack bundle) plus repo/CI/docs files — the `.vsix` drops from ~105 files to 12 (~50 KB)
