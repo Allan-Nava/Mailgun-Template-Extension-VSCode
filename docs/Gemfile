@@ -1,1 +1,7 @@
-gem "just-the-docs"
+source "https://rubygems.org"
+
+# GitHub Pages builds this site with the `github-pages` gem, which pins Jekyll
+# and the allowed plugins. The theme is pulled in via `remote_theme` in
+# _config.yml (just-the-docs), so it is NOT declared here.
+gem "github-pages", group: :jekyll_plugins
+gem "jekyll-remote-theme"

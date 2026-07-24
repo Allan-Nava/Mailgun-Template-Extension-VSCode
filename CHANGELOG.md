@@ -31,3 +31,8 @@
 - Remove dead code: unused module-level editor listener and unused imports
 - Add `CLAUDE.md` and `AGENTS.md`
 - CI: add `.github/workflows/release.yml` — push a `v*` tag to build, create a GitHub Release and publish to the Marketplace (requires `VSCE_PAT` secret)
+
+## [v0.0.146]
+
+- Docs: fix GitHub Pages build — drop the conflicting `theme:` key, pin `remote_theme: just-the-docs/just-the-docs@v0.3.3`, add the `jekyll-remote-theme` plugin
+- Docs: fix `docs/Gemfile` (explicit `source`, use the `github-pages` gem instead of a bare `just-the-docs` dependency)
