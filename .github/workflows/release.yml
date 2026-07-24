@@ -1,0 +1,49 @@
+name: Release
+
+# Si attiva al push di un tag vX.Y.Z.
+# Builda, impacchetta il .vsix, crea la GitHub Release e — se il secret
+# VSCE_PAT è configurato — pubblica sul VS Code Marketplace (publisher allannava95).
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    # Mappato a livello di job così lo step di publish può gateare su di esso:
+    # il context `secrets` NON è disponibile in uno step `if:` (renderebbe
+    # invalido l'intero workflow), mentre il context `env` sì.
+    env:
+      VSCE_PAT: ${{ secrets.VSCE_PAT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint & compile
+        run: |
+          npm run lint
+          npm run compile
+
+      - name: Package VSIX
+        run: npx vsce package --out "mailgun-upload-template-vscode-${GITHUB_REF_NAME}.vsix"
+
+      - name: GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "mailgun-upload-template-vscode-${{ github.ref_name }}.vsix"
+          generate_release_notes: true
+
+      - name: Publish to VS Code Marketplace
+        if: ${{ env.VSCE_PAT != '' }}
+        run: npx vsce publish --pat "$VSCE_PAT"

@@ -30,3 +30,4 @@
 - Fix `test` npm script to run `out/test/runTest.js` (`vscode-test` runner)
 - Remove dead code: unused module-level editor listener and unused imports
 - Add `CLAUDE.md` and `AGENTS.md`
+- CI: add `.github/workflows/release.yml` — push a `v*` tag to build, create a GitHub Release and publish to the Marketplace (requires `VSCE_PAT` secret)

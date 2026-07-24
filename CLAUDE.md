@@ -24,7 +24,7 @@ Il config file `mailgun-config.json` **NON** sta nel workspace: `getConfigPath()
 ## Regole di lavoro (SEMPRE)
 
 - **MAI `git push`** — lo fa sempre l'utente. **MAI `Co-Authored-By`** nei commit.
-- **Nessuna automazione di release in questo repo**: non esistono `scripts/new-release.sh` né `.github/workflows/release.yml`. Il publish è **manuale**: `npx vsce login allannava95` (con PAT del nuovo account) poi `npx vsce publish [patch|minor|major]`. `vsce publish` valida il campo `publisher` contro il PAT — deve essere `allannava95`, altrimenti fallisce con mismatch.
+- **Release automatizzata via tag**: al push di un tag `v*`, `.github/workflows/release.yml` fa `npm ci` + lint + compile, impacchetta il `.vsix`, crea la GitHub Release e — se il secret **`VSCE_PAT`** è configurato — pubblica sul Marketplace con `vsce publish --pat`. Flusso: bumpa `version` in `package.json` (+ `package-lock.json`), annota `CHANGELOG.md`, commit, `git tag -a vX.Y.Z`, push del tag. `vsce` valida il campo `publisher` contro il PAT → deve essere `allannava95`. In alternativa publish **manuale**: `npx vsce login allannava95` + `npx vsce publish`.
 - **`publisher` = `allannava95`**, ma gli URL GitHub (`repository`, `bugs`, CODEOWNERS, README/docs) restano `Allan-Nava`: sono due account distinti (Marketplace vs GitHub). Non "uniformarli".
 - **Ogni modifica va annotata in `CHANGELOG.md`** (oggi in formato `## [vX.Y.Z]`, non Keep-a-Changelog). Bumpare `version` in `package.json` a mano prima del publish.
 - **Un comando nuovo tocca più punti** e vanno propagati: `package.json` (`contributes.commands` + `menus` + `activationEvents`), `src/extension.ts` (`registerCommand` + `context.subscriptions.push`), README/CHANGELOG. Il `command` deve **combaciare esattamente** tra `package.json` e `registerCommand(...)`.
@@ -61,6 +61,6 @@ Debug interattivo: F5 in VSCode → config **"Run Extension"** (apre Extension D
 ## Puntatori
 
 - Repo/issue: `github.com/Allan-Nava/Mailgun-Template-Extension-VSCode` · Owner: `@Allan-Nava` (`.github/CODEOWNERS`) · Docs: `docs/` (GitHub Pages/Jekyll)
-- CI: `.github/workflows/ci.yml` · Manifest: `package.json` · Config utente runtime: `mailgun-config.json` nella dir User di VSCode
+- CI: `.github/workflows/ci.yml` · Release: `.github/workflows/release.yml` (tag `v*`, secret `VSCE_PAT`) · Manifest: `package.json` · Config utente runtime: `mailgun-config.json` nella dir User di VSCode
 - API Mailgun template: `https://documentation.mailgun.com/` (endpoint `/v3/{domain}/templates`)
 - Regole per agent AI: `AGENTS.md`

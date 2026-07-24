@@ -7,7 +7,7 @@ Questo file definisce le regole operative per gli agent AI (Copilot, Claude, alt
 ## Regole di lavoro (SEMPRE)
 
 - **MAI `git push`**: lo fa sempre l'utente. **MAI `Co-Authored-By`** nei commit.
-- **Release manuale, nessuna automazione**: non c'è `new-release.sh` né workflow di release. Bumpa `version` in `package.json`, annota in `CHANGELOG.md`, poi `npx vsce login allannava95` + `npx vsce publish [patch|minor|major]`. `vsce` valida il campo `publisher` contro il PAT → deve essere `allannava95`.
+- **Release via tag**: bumpa `version` (`package.json` + `package-lock.json`), annota `CHANGELOG.md`, commit, `git tag -a vX.Y.Z`, push del tag → `.github/workflows/release.yml` builda, crea la GitHub Release e pubblica sul Marketplace (secret `VSCE_PAT`). `vsce` valida il `publisher` contro il PAT → `allannava95`. Publish manuale alternativo: `npx vsce login allannava95` + `npx vsce publish`.
 - **`publisher` = `allannava95`; gli URL GitHub restano `Allan-Nava`**: account Marketplace e account GitHub sono distinti. Non uniformarli. Cambiare publisher cambia l'id → nuova entry sul Marketplace, non un update.
 - **Un comando nuovo va propagato**: `package.json` (`contributes.commands` + `menus` + `activationEvents`), `src/extension.ts` (`registerCommand` + `context.subscriptions.push`), README/CHANGELOG. Il `command` deve **combaciare esattamente** tra manifest e `registerCommand(...)`.
 - **`.vscodeignore` decide il pacchetto**: `src/`, `*.ts`, `*.map`, `out/test/**`, `.vscode/**` esclusi. Verificare con `npx vsce ls` prima di pubblicare.
