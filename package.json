@@ -1,5 +1,5 @@
 {
-	"name": "mailgun-upload-template-vscode",
+	"name": "mailgun-template-uploader",
 	"displayName": "Mailgun Upload Template",
 	"description": "Easy way to upload mailgun template",
 	"version": "0.0.147",

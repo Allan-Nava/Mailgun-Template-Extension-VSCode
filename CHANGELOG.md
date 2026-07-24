@@ -42,3 +42,4 @@
 
 - SECURITY: stop tracking/packaging the `key` / `key.pub` OpenSSH keypair (untracked from git and added to `.gitignore`; the key must also be rotated — see note)
 - Packaging: `.vscodeignore` now excludes `node_modules/**` (the extension is a self-contained webpack bundle) plus repo/CI/docs files — the `.vsix` drops from ~105 files to 12 (~50 KB)
+- Marketplace: rename the `name` field to `mailgun-template-uploader` — the old `mailgun-upload-template-vscode` name is still owned by the former `Allan-Nava` publisher, so it can't be republished under `allannava95`. New id: `allannava95.mailgun-template-uploader`. `displayName` and command ids are unchanged.

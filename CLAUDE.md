@@ -1,6 +1,6 @@
 # CLAUDE.md — Mailgun-Template-Extension-VSCode
 
-Estensione VSCode (repo `github.com/Allan-Nava/Mailgun-Template-Extension-VSCode`, marketplace publisher `allannava95`, id `allannava95.mailgun-upload-template-vscode`) che carica template HTML su **Mailgun** direttamente dall'editor. Scritta in **TypeScript**, bundlata con **webpack**, target `node`. _Nota: il publisher Marketplace è stato migrato da `Allan-Nava` a `allannava95` (l'org GitHub resta `Allan-Nava`). Il cambio di publisher cambia l'id completo dell'estensione → sul Marketplace risulta come estensione nuova, non un aggiornamento della precedente._
+Estensione VSCode (repo `github.com/Allan-Nava/Mailgun-Template-Extension-VSCode`, marketplace publisher `allannava95`, id `allannava95.mailgun-template-uploader`) che carica template HTML su **Mailgun** direttamente dall'editor. Scritta in **TypeScript**, bundlata con **webpack**, target `node`. _Nota migrazione: pubblicata originariamente come `Allan-Nava.mailgun-upload-template-vscode`; migrata a publisher `allannava95` perché l'account vecchio non è più accessibile (l'org GitHub resta `Allan-Nava`). Il vecchio `name` `mailgun-upload-template-vscode` era già occupato sul Marketplace → il campo **`name`** in `package.json` è stato cambiato in `mailgun-template-uploader`. **Attenzione**: i **command id** restano `mailgun-upload-template-vscode.*` (sono indipendenti dal `name` e NON vanno "allineati"). Sul Marketplace è un'estensione nuova, non un update della precedente._
 
 ## Layout
 

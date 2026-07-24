@@ -1,6 +1,6 @@
 # AGENTS.md — Mailgun-Template-Extension-VSCode
 
-Estensione VSCode (repo `github.com/Allan-Nava/Mailgun-Template-Extension-VSCode`, publisher Marketplace `allannava95`, id `allannava95.mailgun-upload-template-vscode`) che carica template HTML su **Mailgun** dall'editor. TypeScript + webpack (target `node`). Command id: `mailgun-upload-template-vscode.{config,get-config,upload}`.
+Estensione VSCode (repo `github.com/Allan-Nava/Mailgun-Template-Extension-VSCode`, publisher Marketplace `allannava95`, id `allannava95.mailgun-template-uploader`) che carica template HTML su **Mailgun** dall'editor. TypeScript + webpack (target `node`). NB: il `name` in `package.json` è `mailgun-template-uploader`, ma i **command id** restano `mailgun-upload-template-vscode.{config,get-config,upload}` (indipendenti dal `name`, non allinearli).
 
 Questo file definisce le regole operative per gli agent AI (Copilot, Claude, altri tool) in questo repository. Per il contesto tecnico completo vedi `CLAUDE.md`.
 
